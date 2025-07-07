@@ -1,0 +1,45 @@
+{% extends 'definitions/index.html.twig' %}
+{% block content %}
+    <h2 style="margin-left: 460px;">{{ text }}</h2>
+    {% if sourceLangPhoneticSpelling ?? false %}
+        <p style="margin-left: 460px;">/{{ sourceLangPhoneticSpelling }}/</p>
+    {% endif %}
+    <table style="margin-left: 460px; border-top: solid 1px; width: 450px; table-layout: fixed;">
+        <ol>
+            {% for key, value in senses %}
+                <tr>
+                    <th style="text-align: initial;">{{ key }}</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                </tr>
+
+                {% for def in value %}
+                    {% if def['definitions'] ?? false %}
+                        {% for definitions in def['definitions'] %}
+                            <tr>
+                                <td>&nbsp;</td>
+                                <ol>
+                                    <td colspan="3">
+                                        <li>{{ definitions }}</li>
+                                    </td>
+                                </ol>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                    {% if def['examples'] ?? false %}
+                        {% for examples in def['examples'] %}
+                            <tr>
+                                <td>&nbsp;</td>
+                                <ol>
+                                    <td colspan="3">
+                                        <span style="font-family:monospace;">{{ examples.text }}</span>
+                                    </td>
+                                </ol>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </ol>
+    </table>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <main>
+        <section style="display: flex; flex-wrap: wrap; gap: 20px;">
+            <button style="flex: 1 0 300px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; background-color: lightblue" class="js-search-definitions"><h2 style="font-size: 50px; font-family: cursive;">Definitions</h2></button>
+            <button style="flex: 1 0 300px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); padding: 20px; text-align: center; background-color: lightblue" class="js-search-translations"><h2 style="font-size: 50px; font-family: cursive;">Translations</h2></button>
+        </section>
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/search_translations.js') }}"></script>
+    <script src="{{ asset('js/search_definitions.js') }}"></script>
+{% endblock %}
