@@ -1,0 +1,342 @@
+{
+  "id": "alert",
+  "metadata": {
+    "operation": "translations",
+    "provider": "Oxford University Press",
+    "schema": "RetrieveTranslations"
+  },
+  "results": [
+    {
+      "id": "alert",
+      "language": "en",
+      "lexicalEntries": [
+        {
+          "entries": [
+            {
+              "pronunciations": [
+                {
+                  "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3",
+                  "dialects": [
+                    "British English"
+                  ],
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "əˈləːt"
+                },
+                {
+                  "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3",
+                  "dialects": [
+                    "American English"
+                  ],
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "əˈlərt"
+                }
+              ],
+              "senses": [
+                {
+                  "datasetCrossLinks": [
+                    {
+                      "entry_id": "alert",
+                      "language": "en-gb",
+                      "sense_id": "m_en_gbus0021680.009"
+                    }
+                  ],
+                  "id": "b-en-it0001643.002",
+                  "notes": [
+                    {
+                      "text": "lively",
+                      "type": "indicator"
+                    }
+                  ],
+                  "translations": [
+                    {
+                      "collocations": [
+                        {
+                          "id": "child",
+                          "text": "child",
+                          "type": "object"
+                        }
+                      ],
+                      "language": "it",
+                      "text": "vivace, sveglio"
+                    },
+                    {
+                      "collocations": [
+                        {
+                          "id": "old_person",
+                          "text": "old person",
+                          "type": "object"
+                        }
+                      ],
+                      "language": "it",
+                      "text": "arzillo"
+                    }
+                  ]
+                },
+                {
+                  "datasetCrossLinks": [
+                    {
+                      "entry_id": "alert",
+                      "language": "en-gb",
+                      "sense_id": "m_en_gbus0021680.005"
+                    }
+                  ],
+                  "examples": [
+                    {
+                      "text": "to be alert to",
+                      "translations": [
+                        {
+                          "collocations": [
+                            {
+                              "id": "danger",
+                              "text": "danger",
+                              "type": "object"
+                            },
+                            {
+                              "id": "risk",
+                              "text": "risk",
+                              "type": "object"
+                            },
+                            {
+                              "id": "fact",
+                              "text": "fact",
+                              "type": "object"
+                            },
+                            {
+                              "id": "possibility",
+                              "text": "possibility",
+                              "type": "object"
+                            }
+                          ],
+                          "language": "it",
+                          "text": "essere consapevole di"
+                        }
+                      ]
+                    }
+                  ],
+                  "id": "b-en-it0001643.003",
+                  "notes": [
+                    {
+                      "text": "attentive",
+                      "type": "indicator"
+                    }
+                  ],
+                  "translations": [
+                    {
+                      "language": "it",
+                      "text": "vigile"
+                    },
+                    {
+                      "language": "it",
+                      "text": "attento"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "language": "en",
+          "lexicalCategory": {
+            "id": "adjective",
+            "text": "Adjective"
+          },
+          "text": "alert"
+        },
+        {
+          "entries": [
+            {
+              "pronunciations": [
+                {
+                  "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3",
+                  "dialects": [
+                    "British English"
+                  ],
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "əˈləːt"
+                },
+                {
+                  "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3",
+                  "dialects": [
+                    "American English"
+                  ],
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "əˈlərt"
+                }
+              ],
+              "senses": [
+                {
+                  "datasetCrossLinks": [
+                    {
+                      "entry_id": "alert",
+                      "language": "en-gb",
+                      "sense_id": "m_en_gbus0021680.011"
+                    }
+                  ],
+                  "examples": [
+                    {
+                      "text": "to be on the alert for",
+                      "translations": [
+                        {
+                          "collocations": [
+                            {
+                              "id": "danger",
+                              "text": "danger",
+                              "type": "object"
+                            }
+                          ],
+                          "language": "it",
+                          "text": "stare in guardia contro"
+                        }
+                      ]
+                    },
+                    {
+                      "text": "fire, bomb alert",
+                      "translations": [
+                        {
+                          "language": "it",
+                          "text": "allarme antincendio, allarme bomba"
+                        }
+                      ]
+                    },
+                    {
+                      "text": "security alert",
+                      "translations": [
+                        {
+                          "language": "it",
+                          "text": "allarme di sicurezza"
+                        }
+                      ]
+                    },
+                    {
+                      "text": "to be on (red) alert (Military) or on full alert",
+                      "translations": [
+                        {
+                          "language": "it",
+                          "text": "essere in stato di massima allerta"
+                        }
+                      ]
+                    }
+                  ],
+                  "id": "b-en-it0001643.005",
+                  "translations": [
+                    {
+                      "grammaticalFeatures": [
+                        {
+                          "id": "masculine",
+                          "text": "Masculine",
+                          "type": "Gender"
+                        }
+                      ],
+                      "language": "it",
+                      "text": "allarme"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "language": "en",
+          "lexicalCategory": {
+            "id": "noun",
+            "text": "Noun"
+          },
+          "text": "alert"
+        },
+        {
+          "entries": [
+            {
+              "grammaticalFeatures": [
+                {
+                  "id": "transitive",
+                  "text": "Transitive",
+                  "type": "Subcategorization"
+                }
+              ],
+              "pronunciations": [
+                {
+                  "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3",
+                  "dialects": [
+                    "British English"
+                  ],
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "əˈləːt"
+                },
+                {
+                  "audioFile": "https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3",
+                  "dialects": [
+                    "American English"
+                  ],
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "əˈlərt"
+                }
+              ],
+              "senses": [
+                {
+                  "id": "b-en-it0001643.007",
+                  "translations": [
+                    {
+                      "language": "it",
+                      "text": "allertare, mettere in stato d'allerta"
+                    }
+                  ]
+                },
+                {
+                  "datasetCrossLinks": [
+                    {
+                      "entry_id": "alert",
+                      "language": "en-gb",
+                      "sense_id": "m_en_gbus0021680.019"
+                    }
+                  ],
+                  "examples": [
+                    {
+                      "text": "to alert sb to",
+                      "translations": [
+                        {
+                          "collocations": [
+                            {
+                              "id": "danger",
+                              "text": "danger",
+                              "type": "object"
+                            }
+                          ],
+                          "language": "it",
+                          "text": "mettere qcn in guardia contro"
+                        },
+                        {
+                          "collocations": [
+                            {
+                              "id": "fact",
+                              "text": "fact",
+                              "type": "object"
+                            },
+                            {
+                              "id": "situation",
+                              "text": "situation",
+                              "type": "object"
+                            }
+                          ],
+                          "language": "it",
+                          "text": "richiamare l'attenzione di qcn su"
+                        }
+                      ]
+                    }
+                  ],
+                  "id": "b-en-it0001643.008"
+                }
+              ]
+            }
+          ],
+          "language": "en",
+          "lexicalCategory": {
+            "id": "verb",
+            "text": "Verb"
+          },
+          "text": "alert"
+        }
+      ],
+      "type": "headword",
+      "word": "alert"
+    }
+  ],
+  "word": "alert"
+}

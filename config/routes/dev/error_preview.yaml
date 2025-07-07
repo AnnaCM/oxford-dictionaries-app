@@ -1,0 +1,4 @@
+_error_preview:
+  resource: '../../../src/Controller/ErrorPreviewController.php'
+  type: annotation
+  prefix: /

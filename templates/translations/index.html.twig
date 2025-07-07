@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h1>
+        <div class="search-container" style="margin-left: 450px; margin-top: 10px; display: inline-flex;">
+            <input type="text" id="search_translations_word" placeholder="Search" name="search" size="40" style="height: 25px;">
+            <select id="select-translations-languages" name="dict" style="height: 30px; background-color: #EBEEF5; padding: initial;">
+                {% for sourceLangKey, sourceLangValue in sourceLangs %}
+                    <option disabled>-----{{ sourceLangValue }}--------</option>
+                    {% for targetLangKey, targetLangValue in targetLangs %}
+                        {% if sourceLangKey == selectedSourceLang and targetLangKey == selectedTargetLang %}
+                            <option value="{{ sourceLangKey }} {{ targetLangKey }}" selected="selected">{{ sourceLangValue }}-{{ targetLangValue }}</option>
+                        {% elseif sourceLangKey != targetLangKey %}
+                            <option value="{{ sourceLangKey }} {{ targetLangKey }}">{{ sourceLangValue }}-{{ targetLangValue }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </select>
+            <button type="button" style="height: 30px; background-color: #EBEEF5;">
+                <a href="#" class="js-search-translations">
+                    <img src="{{ asset('images/search_icon.png') }}" height="20" alt="">
+                </a>
+            </button>
+        </div>
+    </h1>
+
+    {% block content %}{% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/search_translations.js') }}"></script>
+{% endblock %}

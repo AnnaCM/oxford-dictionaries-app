@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  App\Service\Definitions:
+  App\Service\ExceptionHandler:
+  App\Service\Translations:
+  Twig\Environment:
+      public: true

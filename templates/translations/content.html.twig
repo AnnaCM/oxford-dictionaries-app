@@ -1,0 +1,70 @@
+{% extends 'translations/index.html.twig' %}
+{% block content %}
+    <h2 style="margin-left: 460px;">{{ text }}</h2>
+    {% set pronunciation = "" %}
+    {% if pronunciations ?? false %}
+        {% for dialect, phoneticSpelling in pronunciations %}
+            {% if pronunciation is empty %}
+                {% set pronunciation = dialect ~ ':' ~ ' /' ~ phoneticSpelling ~ '/' %}
+            {% else %}
+                {% set pronunciation = pronunciation ~ '  |  ' ~ dialect ~ ':' ~ ' /' ~ phoneticSpelling ~ '/' %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if pronunciation ?? false %}
+        <p style="margin-left: 460px;">{{ pronunciation }}</p>
+    {% endif %}
+    <table style="margin-left: 460px; border-top: solid 1px; width: 450px; table-layout: fixed;">
+        {% for key, value in senses %}
+            <tr>
+                <th style="text-align: initial;">{{ key }}</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            </tr>
+            {% for def in value %}
+                <tr>
+                    {% if def['notes'] ?? false %}
+                        {% for notes in def['notes'] %}
+                            <td>&nbsp;</td>
+                            <td>({{ notes.text }})</td>
+                        {% endfor %}
+                    {% else %}
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    {% endif %}
+
+                    {% if def['translations'] ?? false %}
+                    <td>
+                        <ol style="list-style-type: none; padding-inline-start: 1px; margin-block-start: 2px; margin-block-end: 5px;">
+                            {% for translations in def['translations'] %}
+                                <li>{{ translations.text }}</li>
+                            {% endfor %}
+                        </ol>
+                    </td>
+                    {% else %}
+                        <td>&nbsp;</td>
+                    {% endif %}
+                </tr>
+
+                {% if def['examples'] ?? false %}
+                    {% for examples in def['examples'] %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="2"><span style="font-family:monospace;">{{ examples.text }}</span></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="2">
+                                <ol style="list-style-type: none; padding-inline-start: 1px; font-family:monospace;">
+                                    {% for translations in examples.translations %}
+                                        <li>{{ translations.text }}</li>
+                                    {% endfor %}
+                                </ol>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </table>
+{% endblock %}
