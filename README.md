@@ -86,5 +86,5 @@ Let's make this project better together. 🙌
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).  
+This project is licensed under the [MIT License](LICENSE.md).  
 You are free to use, modify, and distribute it with proper attribution.
