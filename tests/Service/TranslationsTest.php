@@ -5,8 +5,10 @@ namespace App\Tests\Service;
 use App\Entity\Translations as TranslationsEntity;
 use App\Exception\NotFoundError;
 use App\Exception\ValidationError;
+use App\Service\CacheStore as CacheService;
 use App\Service\Translations as TranslationsService;
 use App\Tests\Service\Util\HttpMock;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class TranslationsTest extends TestCase
@@ -17,13 +19,20 @@ class TranslationsTest extends TestCase
     private string $endpoint;
     private string $appId;
     private string $appKey;
+    private MockObject $cacheServiceMock;
 
     protected function setUp(): void
     {
         $this->endpoint = 'https://api.exampledictionaries.com/api';
         $this->appId = 'APP_ID';
         $this->appKey = 'APP_KEY';
+
+        $this->cacheServiceMock = $this->getMockBuilder(CacheService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->translationsService = new TranslationsService(
+            $this->cacheServiceMock,
             $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json"), 200),
             $this->endpoint,
             $this->appId,
@@ -35,6 +44,8 @@ class TranslationsTest extends TestCase
     {
         $this->expectException(ValidationError::class);
         $this->expectExceptionMessage('Invalid code for source language: fr');
+        $this->cacheServiceMock->expects($this->never())->method('get');
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $this->translationsService->getTranslations('fr', 'en', 'alert');
     }
@@ -43,6 +54,8 @@ class TranslationsTest extends TestCase
     {
         $this->expectException(ValidationError::class);
         $this->expectExceptionMessage('Invalid code for target language: gu');
+        $this->cacheServiceMock->expects($this->never())->method('get');
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $this->translationsService->getTranslations('en', 'gu', 'alert');
     }
@@ -51,8 +64,11 @@ class TranslationsTest extends TestCase
     {
         $this->expectException(ValidationError::class);
         $this->expectExceptionMessage('');
+        $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Translations::getTranslations_ace_en_de')->willReturn(null);
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $definitionsService = new TranslationsService(
+            $this->cacheServiceMock,
             $this->mockHttpClient($this->endpoint, '', 400),
             $this->endpoint,
             $this->appId,
@@ -66,8 +82,11 @@ class TranslationsTest extends TestCase
     {
         $this->expectException(NotFoundError::class);
         $this->expectExceptionMessage('');
+        $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Translations::getTranslations_aaa_el_en')->willReturn(null);
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $definitionsService = new TranslationsService(
+            $this->cacheServiceMock,
             $this->mockHttpClient($this->endpoint, '', 404),
             $this->endpoint,
             $this->appId,
@@ -79,7 +98,38 @@ class TranslationsTest extends TestCase
 
     public function testGetTranslationsReturnsValidResult()
     {
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('get')
+            ->with('App\Service\Translations::getTranslations_alert_en_it')
+            ->willReturn(null);
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('set')
+            ->with(
+                'App\Service\Translations::getTranslations_alert_en_it',
+                json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json"))
+            );
+
         $translations = $this->translationsService->getTranslations('en', 'it', 'alert');
+        $this->assertResult($translations);
+    }
+
+    public function testGetTranslationsHitsCache()
+    {
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('get')
+            ->with('App\Service\Translations::getTranslations_alert_en_it')
+            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json")));
+        $this->cacheServiceMock->expects($this->never())->method('set');
+
+        $translations = $this->translationsService->getTranslations('en', 'it', 'alert');
+        $this->assertResult($translations);
+    }
+
+    private function assertResult(object $translations)
+    {
         $this->assertInstanceOf(TranslationsEntity::class, $translations);
         $this->assertSame('alert', $translations->text);
         $this->assertSame(

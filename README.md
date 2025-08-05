@@ -47,6 +47,25 @@ APP_KEY=your_oxford_app_key
 
 ---
 
+## 🧠 Caching with Redis
+The app uses Redis to cache results from the Oxford Dictionaries API to speed up repeated queries and reduce external requests.
+
+### Run Redis locally
+You can run Redis in a Docker container:
+
+```bash
+docker run --name redis-cache -p 6379:6379 -d redis
+```
+Or, if installed directly:
+
+```bash
+brew install redis
+brew services start redis
+```
+Redis is optional. If it’s unavailable, the app logs a warning and continues to operate without caching.
+
+---
+
 ## 🚀 Usage
 
 ### Run the application
@@ -86,5 +105,5 @@ Let's make this project better together. 🙌
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE.md).  
+This project is licensed under the [MIT License](LICENSE.md).
 You are free to use, modify, and distribute it with proper attribution.

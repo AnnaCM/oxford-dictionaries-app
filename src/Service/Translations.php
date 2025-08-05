@@ -4,13 +4,38 @@ namespace App\Service;
 
 use App\Converter\Translations as TranslationsConverter;
 use App\Exception\ValidationError;
+use App\Service\CacheStore as CacheStoreService;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Translations extends Dictionary
 {
+    private CacheStoreService $cache;
+
+    public function __construct(
+        CacheStoreService $cache,
+        HttpClientInterface $client,
+        string $serverHost,
+        string $appId,
+        string $appKey
+    ) {
+        $this->cache = $cache;
+        parent::__construct($client, $serverHost, $appId, $appKey);
+    }
+
     public function getTranslations(string $sourceLang, string $targetLang, string $word)
     {
         $this->validateLanguageCode($sourceLang, $targetLang);
+
+        $cacheKey = implode('_', [__METHOD__, $word, $sourceLang, $targetLang]);
+
+        $cachedResult = $this->cache->get($cacheKey);
+        if ($cachedResult) {
+            return TranslationsConverter::convert($cachedResult);
+        }
+
         $responseData = $this->get("/translations/{$sourceLang}/{$targetLang}/{$word}");
+
+        $this->cache->set($cacheKey, $responseData);
 
          return TranslationsConverter::convert($responseData);
     }

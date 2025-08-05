@@ -2,9 +2,9 @@
 
 namespace App\Tests\EventSubscriber;
 
-use Psr\Log\Test\TestLogger;
 use App\EventSubscriber\ExceptionSubscriber;
 use App\Service\ExceptionHandler;
+use Psr\Log\Test\TestLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
