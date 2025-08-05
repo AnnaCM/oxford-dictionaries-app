@@ -5,8 +5,10 @@ namespace App\Tests\Service;
 use App\Entity\Definitions as DefinitionsEntity;
 use App\Exception\NotFoundError;
 use App\Exception\ValidationError;
+use App\Service\CacheStore as CacheService;
 use App\Service\Definitions as DefinitionsService;
 use App\Tests\Service\Util\HttpMock;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class DefinitionsTest extends TestCase
@@ -17,6 +19,7 @@ class DefinitionsTest extends TestCase
     private string $endpoint;
     private string $appId;
     private string $appKey;
+    private MockObject $cacheServiceMock;
 
     protected function setUp(): void
     {
@@ -24,7 +27,12 @@ class DefinitionsTest extends TestCase
         $this->appId = 'APP_ID';
         $this->appKey = 'APP_KEY';
 
+        $this->cacheServiceMock = $this->getMockBuilder(CacheService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->definitionsService = new DefinitionsService(
+            $this->cacheServiceMock,
             $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json"), 200),
             $this->endpoint,
             $this->appId,
@@ -36,6 +44,8 @@ class DefinitionsTest extends TestCase
     {
         $this->expectException(ValidationError::class);
         $this->expectExceptionMessage('Invalid code for source language: it');
+        $this->cacheServiceMock->expects($this->never())->method('get');
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $this->definitionsService->getDefinitions('it', 'ace');
     }
@@ -44,8 +54,11 @@ class DefinitionsTest extends TestCase
     {
         $this->expectException(ValidationError::class);
         $this->expectExceptionMessage('');
+        $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Definitions::getDefinitions_ace_es')->willReturn(null);
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $definitionsService = new DefinitionsService(
+            $this->cacheServiceMock,
             $this->mockHttpClient($this->endpoint, '', 400),
             $this->endpoint,
             $this->appId,
@@ -59,8 +72,11 @@ class DefinitionsTest extends TestCase
     {
         $this->expectException(NotFoundError::class);
         $this->expectExceptionMessage('');
+        $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Definitions::getDefinitions_aaa_es')->willReturn(null);
+        $this->cacheServiceMock->expects($this->never())->method('set');
 
         $definitionsService = new DefinitionsService(
+            $this->cacheServiceMock,
             $this->mockHttpClient($this->endpoint, '', 404),
             $this->endpoint,
             $this->appId,
@@ -72,7 +88,38 @@ class DefinitionsTest extends TestCase
 
     public function testGetDefinitionsReturnsValidResult()
     {
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('get')
+            ->with('App\Service\Definitions::getDefinitions_ace_en-gb')
+            ->willReturn(null);
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('set')
+            ->with(
+                'App\Service\Definitions::getDefinitions_ace_en-gb',
+                json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json"))
+            );
+
         $definitions = $this->definitionsService->getDefinitions('en-gb', 'ace');
+        $this->assertResults($definitions);
+    }
+
+    public function testGetDefinitionsHitsCache()
+    {
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('get')
+            ->with('App\Service\Definitions::getDefinitions_ace_en-gb')
+            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json")));
+        $this->cacheServiceMock->expects($this->never())->method('set');
+
+        $definitions = $this->definitionsService->getDefinitions('en-gb', 'ace');
+        $this->assertResults($definitions);
+    }
+
+    private function assertResults(object $definitions)
+    {
         $this->assertInstanceOf(DefinitionsEntity::class, $definitions);
         $this->assertSame('ace', $definitions->text);
         $this->assertSame(['UK' => ['audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3', 'phoneticSpelling' => 'eɪs']], $definitions->pronunciations);
