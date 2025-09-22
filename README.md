@@ -9,7 +9,7 @@ This PHP application integrates with the [Oxford Dictionaries API](https://devel
 Here’s a quick look at the app in action:
 
 <p align="center">
-  <img src="docs/demo.gif" width="500" alt="App demo showing autocomplete, definitions, and translations" />
+  <img src="docs/demo.gif" width="600" alt="App demo showing autocomplete, definitions, and translations" />
 </p>
 
 ---
@@ -18,9 +18,10 @@ Here’s a quick look at the app in action:
 
 - Fetch word definitions by language
 - Retrieve translations between supported language pairs
+- Autocomplete functionality for faster, smarter word lookups
+- Caching with Redis for improved performance
 - Graceful API error handling with custom Twig templates
 - Functional test coverage for key routes and exception handling
-- Autocomplete functionality powered by Redis for faster, smarter word lookups
 
 ---
 
@@ -30,7 +31,6 @@ Here’s a quick look at the app in action:
 - Composer
 - [Symfony CLI](https://symfony.com/download) *(recommended)*
 - An [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) account
-- Redis *(for caching and autocomplete)*
 
 ---
 
@@ -61,8 +61,8 @@ APP_KEY=your_oxford_app_key
 
 ## 🧠 Redis for Caching & Autocomplete
 The app uses Redis to:
-• cache results from the Oxford Dictionaries API to speed up repeated queries;
-• provide autocomplete suggestions as you type, making lookups faster and more user-friendly.
+- cache results from the Oxford Dictionaries API to speed up repeated queries;
+- provide autocomplete suggestions as you type, making lookups faster and more user-friendly.
 
 ### Run Redis locally
 You can run Redis in a Docker container:
@@ -85,8 +85,8 @@ php bin/console app:load-dictionary-words
 ```
 
 This will:
-• import available words into Redis;
-• enable fast prefix-based searches for autocomplete.
+- import available words into Redis;
+- enable fast prefix-based searches for autocomplete.
 
 Redis is optional. If unavailable, the app logs a warning and continues to operate without caching or autocomplete.
 
