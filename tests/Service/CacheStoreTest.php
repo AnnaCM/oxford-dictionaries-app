@@ -24,7 +24,7 @@ class CacheStoreTest extends TestCase
         $this->cacheService = new CacheStoreService($this->redisClientInterfaceMock, $this->loggerMock);
     }
 
-    public function testGetFoundCacheKey()
+    public function testGetFindsCacheKey()
     {
         $cacheKey = 'key';
 
@@ -49,7 +49,7 @@ class CacheStoreTest extends TestCase
         $this->assertEquals((object)['data' => 'value'], $cachedResult);
     }
 
-    public function testGetDoesntFoundCacheKey()
+    public function testGetDoesntFindCacheKey()
     {
         $cacheKey = 'key';
 
@@ -72,7 +72,7 @@ class CacheStoreTest extends TestCase
         $this->assertNull($cachedResult);
     }
 
-    public function testGetLogsInfoAndHandlesException()
+    public function testGetLogsWarningAndHandlesException()
     {
         $cacheKey = 'key';
         $exceptionMessage = 'Connection refused';
@@ -115,7 +115,7 @@ class CacheStoreTest extends TestCase
         $this->cacheService->set($cacheKey, (object)$result);
     }
 
-    public function testSetLogsInfoAndHandlesException()
+    public function testSetLogsWarningAndHandlesException()
     {
         $cacheKey = 'key';
         $result = ['data' => 'value'];
@@ -134,5 +134,84 @@ class CacheStoreTest extends TestCase
             ->willThrowException(new ConnectionException($connectionMock, $exceptionMessage));
 
         $this->cacheService->set($cacheKey, (object)$result);
+    }
+
+    public function testZIncrByIncrementsScore()
+    {
+        $member = 'key';
+        $value = 1;
+        $cacheKey = 'dictionary_words';
+
+        $this->loggerMock
+            ->expects($this->once())
+            ->method('info')
+            ->with('Incrementing the score of ' . $member . ' from the sorted set ' . $cacheKey . ' by ' . $value . '.');
+
+        $this->redisClientInterfaceMock
+            ->expects($this->once())
+            ->method('zIncrBy')
+            ->with($cacheKey, $value, $member);
+
+        $this->cacheService->zIncrBy($cacheKey, $value, $member);
+    }
+
+    public function testZIncrByLogsWarningAndHandlesException()
+    {
+        $member = 'key';
+        $value = 1;
+        $cacheKey = 'dictionary_words';
+        $exceptionMessage = 'Connection refused';
+        $connectionMock = $this->createMock(NodeConnectionInterface::class);
+
+        $this->loggerMock
+            ->expects($this->once())
+            ->method('warning')
+            ->with('Could not cache to Redis: ' . $exceptionMessage);
+
+        $this->redisClientInterfaceMock
+            ->expects($this->once())
+            ->method('zIncrBy')
+            ->with($cacheKey, $value, $member)
+            ->willThrowException(new ConnectionException($connectionMock, $exceptionMessage));
+
+        $this->cacheService->zIncrBy($cacheKey, $value, $member);
+    }
+
+    public function testZRangeReturnsSpecifiedRange()
+    {
+        $cacheKey = 'dictionary_words';
+        $start = 0;
+        $end = -1;
+        $options = [];
+
+        $this->redisClientInterfaceMock
+            ->expects($this->once())
+            ->method('zRange')
+            ->with($cacheKey, $start, $end, $options);
+
+        $this->cacheService->zRange($cacheKey, $start, $end, $options);
+    }
+
+    public function testZRangeLogsWarningAndHandlesException()
+    {
+        $cacheKey = 'dictionary_words';
+        $start = 0;
+        $end = -1;
+        $options = [];
+        $exceptionMessage = 'Connection refused';
+        $connectionMock = $this->createMock(NodeConnectionInterface::class);
+
+        $this->loggerMock
+            ->expects($this->once())
+            ->method('warning')
+            ->with('Could not cache to Redis: ' . $exceptionMessage);
+
+        $this->redisClientInterfaceMock
+            ->expects($this->once())
+            ->method('zRange')
+            ->with($cacheKey, $start, $end, $options)
+            ->willThrowException(new ConnectionException($connectionMock, $exceptionMessage));
+
+        $this->cacheService->zRange($cacheKey, $start, $end, $options);
     }
 }

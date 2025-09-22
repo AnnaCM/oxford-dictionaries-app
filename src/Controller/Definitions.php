@@ -19,15 +19,13 @@ class Definitions extends AbstractController
     }
 
     /**
-     * @Route("/definitions", name="definitions", methods={"GET"})
+     * @Route(path={"/", "/definitions"}, name="definitions", methods={"GET"})
      */
     public function index(): Response
     {
-        $defaultSourceLang = 'en-gb';
-
         return $this->render(
             'definitions/index.html.twig',
-            $this->getParameters($defaultSourceLang)
+            $this->getParameters($this->service::DEFAULT_DEFINITIONS_SOURCE_LANG)
         );
     }
 

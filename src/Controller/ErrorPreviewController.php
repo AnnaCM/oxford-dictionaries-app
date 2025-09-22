@@ -13,7 +13,6 @@ class ErrorPreviewController
     public function __construct(Environment $twig)
     {
         $this->twig = $twig;
-        $this->twig->addGlobal('layout_template', 'definitions/index.html.twig');
     }
 
     /**

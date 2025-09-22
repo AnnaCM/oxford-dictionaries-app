@@ -46,6 +46,7 @@ class DefinitionsTest extends TestCase
         $this->expectExceptionMessage('Invalid code for source language: it');
         $this->cacheServiceMock->expects($this->never())->method('get');
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $this->definitionsService->getDefinitions('it', 'ace');
     }
@@ -56,6 +57,7 @@ class DefinitionsTest extends TestCase
         $this->expectExceptionMessage('');
         $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Definitions::getDefinitions_ace_es')->willReturn(null);
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $definitionsService = new DefinitionsService(
             $this->cacheServiceMock,
@@ -74,6 +76,7 @@ class DefinitionsTest extends TestCase
         $this->expectExceptionMessage('');
         $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Definitions::getDefinitions_aaa_es')->willReturn(null);
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $definitionsService = new DefinitionsService(
             $this->cacheServiceMock,
@@ -86,44 +89,71 @@ class DefinitionsTest extends TestCase
         $definitionsService->getDefinitions('es', 'aaa');
     }
 
-    public function testGetDefinitionsReturnsValidResult()
-    {
+    /**
+     * @dataProvider getWordDefinitions
+     */
+    public function testGetDefinitionsReturnsValidResult(
+        string $word,
+        string $sourceLang,
+        array $result
+    ) {
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('get')
-            ->with('App\Service\Definitions::getDefinitions_ace_en-gb')
+            ->with('App\Service\Definitions::getDefinitions_' . $word . '_' . $sourceLang)
             ->willReturn(null);
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('set')
             ->with(
-                'App\Service\Definitions::getDefinitions_ace_en-gb',
-                json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json"))
+                'App\Service\Definitions::getDefinitions_' . $word . '_' . $sourceLang,
+                json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/{$word}.json"))
             );
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('zIncrBy')
+            ->with('dictionary_words', 1, $word);
 
-        $definitions = $this->definitionsService->getDefinitions('en-gb', 'ace');
-        $this->assertResults($definitions);
+        if ($word != 'ace') {
+            $definitionsService = new DefinitionsService(
+                $this->cacheServiceMock,
+                $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Definitions/{$word}.json"), 200),
+                $this->endpoint,
+                $this->appId,
+                $this->appKey
+            );
+        } else {
+            $definitionsService = $this->definitionsService;
+        }
+
+        $definitions = $definitionsService->getDefinitions($sourceLang, $word);
+        $this->assertInstanceOf(DefinitionsEntity::class, $definitions);
+        $this->assertSame($word, $definitions->text);
+        $this->assertSame($result['pronunciations'], $definitions->pronunciations);
+        $this->assertEquals($result['senses'], $definitions->senses);
     }
 
     public function testGetDefinitionsHitsCache()
     {
+        [$word, $sourceLang, $result] = $this->getWordDefinitions()['ace'];
+
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('get')
-            ->with('App\Service\Definitions::getDefinitions_ace_en-gb')
-            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json")));
+            ->with('App\Service\Definitions::getDefinitions_' . $word . '_' . $sourceLang)
+            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/{$word}.json")));
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
-        $definitions = $this->definitionsService->getDefinitions('en-gb', 'ace');
-        $this->assertResults($definitions);
+        $definitions = $this->definitionsService->getDefinitions($sourceLang, $word);
+        $this->assertInstanceOf(DefinitionsEntity::class, $definitions);
+        $this->assertSame($word, $definitions->text);
+        $this->assertSame($result['pronunciations'], $definitions->pronunciations);
+        $this->assertEquals($result['senses'], $definitions->senses);
     }
 
-    private function assertResults(object $definitions)
+    public function getWordDefinitions(): array
     {
-        $this->assertInstanceOf(DefinitionsEntity::class, $definitions);
-        $this->assertSame('ace', $definitions->text);
-        $this->assertSame(['UK' => ['audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3', 'phoneticSpelling' => 'eɪs']], $definitions->pronunciations);
-
         $example11 = new \stdClass();
         $example11->text = "the ace of diamonds";
         $example12 = new \stdClass();
@@ -153,47 +183,70 @@ class DefinitionsTest extends TestCase
         $example61 = new \stdClass();
         $example61->text = "I aced my grammar test";
 
-        $this->assertEquals([
-            'noun' => [
-                [
-                    'definitions' => [
-                        "a playing card with a single spot on it, ranked as the highest card in its suit in most card games"
+        $aceResult = [
+            'pronunciations' => ['UK' => ['audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3', 'phoneticSpelling' => 'eɪs']],
+            'senses' => [
+                'noun' => [
+                    [
+                        'definitions' => [
+                            "a playing card with a single spot on it, ranked as the highest card in its suit in most card games"
+                        ],
+                        'examples' => [$example11, $example12]
                     ],
-                    'examples' => [$example11, $example12]
+                    [
+                        'definitions' => ["a person who excels at a particular sport or other activity"],
+                        'examples' => [$example21]
+                    ],
+                    [
+                        'definitions' => ["(in tennis and similar games) a service that an opponent is unable to return and thus wins a point"],
+                        'examples' => [$example31]
+                    ],
+                    [
+                        'definitions' => ["an asexual person"],
+                        'examples' => [$example32]
+                    ]
                 ],
-                [
-                    'definitions' => ["a person who excels at a particular sport or other activity"],
-                    'examples' => [$example21]
+                'adjective' => [
+                    [
+                        'definitions' => ["very good"],
+                        'examples' => [$example41, $example42]
+                    ],
+                    [
+                        'definitions' => ["(of a person) asexual"],
+                        'examples' => [$example43]
+                    ]
                 ],
-                [
-                    'definitions' => ["(in tennis and similar games) a service that an opponent is unable to return and thus wins a point"],
-                    'examples' => [$example31]
-                ],
-                [
-                    'definitions' => ["an asexual person"],
-                    'examples' => [$example32]
+                'verb' => [
+                    [
+                        'definitions' => ["(in tennis and similar games) serve an ace against (an opponent)"],
+                        'examples' => [$example51]
+                    ],
+                    [
+                        'definitions' => ["achieve high marks in (a test or exam)"],
+                        'examples' => [$example61]
+                    ]
                 ]
             ],
-            'adjective' => [
-                [
-                    'definitions' => ["very good"],
-                    'examples' => [$example41, $example42]
-                ],
-                [
-                    'definitions' => ["(of a person) asexual"],
-                    'examples' => [$example43]
+        ];
+
+        $example11 = new \stdClass();
+        $example11->text = "my lack of artistic ability";
+
+        $artisticResult = [
+            'pronunciations' => ['UK' => ['audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/artistic__gb_1.mp3', 'phoneticSpelling' => 'u0251u02d0u02c8tu026astu026ak']],
+            'senses' => [
+                'adjective' => [
+                    [
+                        'definitions' => ["having or revealing natural creative skill"],
+                        'examples' => [$example11],
+                    ]
                 ]
             ],
-            'verb' => [
-                [
-                    'definitions' => ["(in tennis and similar games) serve an ace against (an opponent)"],
-                    'examples' => [$example51]
-                ],
-                [
-                    'definitions' => ["achieve high marks in (a test or exam)"],
-                    'examples' => [$example61]
-                ]
-            ]
-        ], $definitions->senses);
+        ];
+
+        return [
+            'ace' => ['ace', 'en-gb', $aceResult],
+            'artistic' => ['artistic', 'en-gb', $artisticResult],
+        ];
     }
 }

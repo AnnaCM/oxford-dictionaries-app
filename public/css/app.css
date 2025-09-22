@@ -1,0 +1,198 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+table {
+  margin-left: 400px;
+  border-top: solid 1px;
+  width: 570px;
+  table-layout: fixed;
+}
+
+.app-header {
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.oxford-logo {
+  margin-top: 100px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  margin-left: 350px;
+}
+
+.search-bar {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 350px;
+}
+
+.search-bar input, .search-bar select {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.search-bar button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.search-icon {
+  height: 40px;
+  background-color: #EBEEF5;
+}
+
+#suggestions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 369px;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 184.5px;
+  z-index: 1000;
+}
+#suggestions li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+#suggestions li:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.homepage-options {
+  display: flex;
+  gap: 2rem;
+  margin: 2rem;
+}
+
+.option-card {
+  flex: 1;
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  background: #f0f8ff;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.results {
+  padding: 2rem;
+}
+
+.site-footer {
+  flex-shrink: 0;
+  background: #fafafa;
+  border-top: 1px solid #e5e7eb;
+  color: #374151;
+  margin-top: 20px;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+}
+.footer-logo {
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.footer-tag {
+  display: block;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.footer-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.footer-links a {
+  text-decoration: none;
+  color: #374151;
+}
+.footer-links a:hover {
+  text-decoration: underline;
+}
+.footer-meta {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+main#results-container {
+  flex: 1;
+}
+
+.error-heading {
+    text-align: center;
+    margin: 40px 0 10px 0;
+}
+
+.error-message {
+    text-align: center;
+    margin: 5px 0;
+}
+
+.content-heading {
+    margin-left: 400px;
+}
+
+.content-subtext {
+    margin-left: 400px;
+    font-style: italic;
+}
+
+.content-pronunciation {
+    margin-left: 400px;
+}
+
+.content-example {
+    font-family: monospace;
+}
+
+.content-table th {
+    text-align: left;
+    padding: 5px;
+}
+
+.content-table td {
+    padding: 3px 5px;
+    vertical-align: top;
+}
+
+.definitions-list,
+.examples-list,
+.translations-list {
+    list-style-type: none;
+    padding-inline-start: 1px;
+    margin-block-start: 2px;
+    margin-block-end: 5px;
+}
+
+.examples-list {
+    border-bottom: 1px solid #ddd;
+    font-family: monospace;
+}

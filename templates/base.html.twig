@@ -1,26 +1,51 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <div style="display: flex;">
-            <img src="{{ asset('images/home_page_img.png') }}" height="300" alt="">
-            <a href="#" style="font-size: 80px; font-family: 'American Typewriter', cursive; text-decoration: none; margin: 80px 0 0 100px; color: black" class="js-homepage">
-                the a- dictionary
-            </a>
-            <img src="{{ asset('images/oxford_languages_logo.png') }}" style="height: 200px; margin: 80px 80px 0 0;" alt="">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}WordHop{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <img src="{{ asset('images/dictionary_logo.png') }}" height="300" alt="Logo" class="logo">
+            <img src="{{ asset('images/oxford_languages_logo.png') }}" height="200" alt="Oxford Languages" class="oxford-logo">
         </div>
-    </head>
-    <body>
-        {% block stylesheets %}{% endblock %}
+        {% include 'partials/search_bar.html.twig' %}
+    </header>
 
+    <main id="results-container">
         {% block body %}{% endblock %}
+    </main>
 
-        {% block javascripts %}
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-            <script src="{{ asset('js/homepage.js') }}"></script>
-        {% endblock %}
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <span class="footer-logo">WordHop</span>
+                <small class="footer-tag">Find meanings & translations fast.</small>
+            </div>
 
-    </body>
+            <nav class="footer-links" aria-label="Footer">
+                <a href="/">Home</a>
+                <a href="{{ path('definitions') }}">Definitions</a>
+                <a href="{{ path('translations') }}">Translations</a>
+            </nav>
+
+            <div class="footer-meta">
+                <span>v1.0.0</span>
+                <span>© {{ "now"|date("Y") }} WordHop</span>
+            </div>
+        </div>
+    </footer>
+
+    {% block javascripts %}
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+        <script type="module" src="{{ asset('js/homepage.js') }}"></script>
+        <script type="module" src="{{ asset('js/search_input.js') }}"></script>
+        <script type="module" src="{{ asset('js/search_languages.js') }}"></script>
+    {% endblock %}
+</body>
 </html>

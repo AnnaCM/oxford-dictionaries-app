@@ -1,14 +1,13 @@
-{% extends 'definitions/index.html.twig' %}
-{% block content %}
-    <h2 style="margin-left: 460px;">{{ text }}</h2>
+{% if text is defined %}
+    <h2 class="content-heading">{{ text }}</h2>
     {% if sourceLangPhoneticSpelling ?? false %}
-        <p style="margin-left: 460px;">/{{ sourceLangPhoneticSpelling }}/</p>
+        <p class="content-pronunciation">/{{ sourceLangPhoneticSpelling }}/</p>
     {% endif %}
-    <table style="margin-left: 460px; border-top: solid 1px; width: 450px; table-layout: fixed;">
+    <table>
         <ol>
             {% for key, value in senses %}
                 <tr>
-                    <th style="text-align: initial;">{{ key }}</th>
+                    <th class="content-table">{{ key }}</th>
                     <th>&nbsp;</th>
                     <th>&nbsp;</th>
                 </tr>
@@ -32,7 +31,7 @@
                                 <td>&nbsp;</td>
                                 <ol>
                                     <td colspan="3">
-                                        <span style="font-family:monospace;">{{ examples.text }}</span>
+                                        <span class="content-example">{{ examples.text }}</span>
                                     </td>
                                 </ol>
                             </tr>
@@ -42,4 +41,4 @@
             {% endfor %}
         </ol>
     </table>
-{% endblock %}
+{% endif %}

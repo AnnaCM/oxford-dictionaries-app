@@ -19,6 +19,7 @@ class Dictionary
         'fr' => 'French', 'gu' => 'Gujarati', 'hi' => 'Hindi', 'lv' => 'Latvian',
         'ro' => 'Romanian', 'ta' => 'Tamil', 'zh' => 'Chinese'
     ];
+    const DEFAULT_DEFINITIONS_SOURCE_LANG = 'en-gb';
 
     const ALLOWED_TRANSLATIONS_SOURCE_LANGS = [
         'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
@@ -26,6 +27,7 @@ class Dictionary
         'ms' => 'Malaysian', 'pt' => 'Portuguese', 'qu' => 'Quechua', 'ru' => 'Russian', 'te' => 'Telugu',
         'tt' => 'Tatar', 'zh' => 'Chinese'
     ];
+    const DEFAULT_TRANSLATIONS_SOURCE_LANG = 'en';
 
     const ALLOWED_TRANSLATIONS_TARGET_LANGS = [
         'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
@@ -34,6 +36,7 @@ class Dictionary
         'qu' => 'Quechua', 'ro' => 'Romanian', 'ru' => 'Russian', 'tg' => 'Tajik', 'tt' => 'Tatar',
         'yo' => 'Yoruba', 'zh' => 'Chinese'
     ];
+    const DEFAULT_TRANSLATIONS_TARGET_LANG = 'es';
 
     public function __construct(
         HttpClientInterface $client,

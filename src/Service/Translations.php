@@ -36,6 +36,7 @@ class Translations extends Dictionary
         $responseData = $this->get("/translations/{$sourceLang}/{$targetLang}/{$word}");
 
         $this->cache->set($cacheKey, $responseData);
+        $this->cache->zIncrBy('dictionary_words', 1, strtolower($word));
 
          return TranslationsConverter::convert($responseData);
     }

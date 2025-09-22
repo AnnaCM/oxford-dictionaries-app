@@ -23,12 +23,12 @@ class Translations extends AbstractController
      */
     public function index(): Response
     {
-        $defaultSourceLang = 'en';
-        $defaultTargetLang = 'it';
-
         return $this->render(
             'translations/index.html.twig',
-            $this->getParameters($defaultSourceLang, $defaultTargetLang)
+            $this->getParameters(
+                $this->service::DEFAULT_TRANSLATIONS_SOURCE_LANG,
+                $this->service::DEFAULT_TRANSLATIONS_TARGET_LANG
+            )
         );
     }
 

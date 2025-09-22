@@ -44,4 +44,23 @@ class CacheStore
             $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
         }
     }
+
+    public function zIncrBy(string $cacheKey, int $value, string $member)
+    {
+        try {
+            $this->logger->info("Incrementing the score of {$member} from the sorted set {$cacheKey} by {$value}.");
+            $this->redis->zIncrBy($cacheKey, $value, $member);
+        } catch (ConnectionException $e) {
+            $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
+        }
+    }
+
+    public function zRange(string $cacheKey, int $start, int $end, array $options = [])
+    {
+        try {
+            return $this->redis->zRange($cacheKey, $start, $end, $options);
+        } catch (ConnectionException $e) {
+            $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
+        }
+    }
 }

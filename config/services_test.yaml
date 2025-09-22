@@ -2,6 +2,7 @@ services:
   _defaults:
     public: true
 
+  App\Service\CacheStore:
   App\Service\Definitions:
   App\Service\ExceptionHandler:
   App\Service\Translations:

@@ -1,23 +1,28 @@
-{% extends 'translations/index.html.twig' %}
-{% block content %}
-    <h2 style="margin-left: 460px;">{{ text }}</h2>
+{% if text is defined %}
+    <h2 class="content-heading">{{ text }}</h2>
     {% set pronunciation = "" %}
     {% if pronunciations ?? false %}
         {% for dialect, phoneticSpelling in pronunciations %}
             {% if pronunciation is empty %}
-                {% set pronunciation = dialect ~ ':' ~ ' /' ~ phoneticSpelling ~ '/' %}
+                {% if dialect matches '/[a-zA-Z]+$/' %}
+                    {% set pronunciation = dialect ~ ': ' %}
+                {% endif %}
+                {% set pronunciation = pronunciation ~ '/' ~ phoneticSpelling ~ '/' %}
             {% else %}
-                {% set pronunciation = pronunciation ~ '  |  ' ~ dialect ~ ':' ~ ' /' ~ phoneticSpelling ~ '/' %}
+                {% if dialect matches '/[a-zA-Z]+$/' %}
+                    {% set pronunciation = pronunciation ~ '  |  ' ~ dialect ~ ': ' %}
+                {% endif %}
+                {% set pronunciation = pronunciation ~ '/' ~ phoneticSpelling ~ '/' %}
             {% endif %}
         {% endfor %}
     {% endif %}
     {% if pronunciation ?? false %}
-        <p style="margin-left: 460px;">{{ pronunciation }}</p>
+        <p class="content-pronunciation">{{ pronunciation }}</p>
     {% endif %}
-    <table style="margin-left: 460px; border-top: solid 1px; width: 450px; table-layout: fixed;">
+    <table>
         {% for key, value in senses %}
             <tr>
-                <th style="text-align: initial;">{{ key }}</th>
+                <th class="content-table">{{ key }}</th>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
             </tr>
@@ -26,7 +31,7 @@
                     {% if def['notes'] ?? false %}
                         {% for notes in def['notes'] %}
                             <td>&nbsp;</td>
-                            <td>({{ notes.text }})</td>
+                            <td>({% if notes.type ?? false %}{{ notes.type }}: {% endif %}{{ notes.text }})</td>
                         {% endfor %}
                     {% else %}
                         <td>&nbsp;</td>
@@ -35,9 +40,16 @@
 
                     {% if def['translations'] ?? false %}
                     <td>
-                        <ol style="list-style-type: none; padding-inline-start: 1px; margin-block-start: 2px; margin-block-end: 5px;">
+                        <ol class="translations-list">
                             {% for translations in def['translations'] %}
-                                <li>{{ translations.text }}</li>
+                                {% if translations.notes ?? false %}
+                                    {% for notes in translations.notes %}
+                                        <li>({{ notes.text }})&nbsp;
+                                    {% endfor %}
+                                    {{ translations.text }}</li>
+                                {% else %}
+                                    <li>{{ translations.text }}</li>
+                                {% endif %}
                             {% endfor %}
                         </ol>
                     </td>
@@ -50,12 +62,12 @@
                     {% for examples in def['examples'] %}
                         <tr>
                             <td>&nbsp;</td>
-                            <td colspan="2"><span style="font-family:monospace;">{{ examples.text }}</span></td>
+                            <td colspan="2"><span class="content-example">{{ examples.text }}</span></td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
                             <td colspan="2">
-                                <ol style="list-style-type: none; padding-inline-start: 1px; font-family:monospace;">
+                                <ol class="examples-list">
                                     {% for translations in examples.translations %}
                                         <li>{{ translations.text }}</li>
                                     {% endfor %}
@@ -67,4 +79,4 @@
             {% endfor %}
         {% endfor %}
     </table>
-{% endblock %}
+{% endif %}

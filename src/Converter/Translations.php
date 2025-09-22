@@ -29,20 +29,12 @@ final class Translations implements Convertable
                     foreach ($senses as $sense) {
                         $translationsSenses = [];
 
-                        if (isset($sense->translations)) {
-                            $translationsSenses['translations'] = $sense->translations;
-                        }
-
-                        if (isset($sense->notes)) {
-                            $translationsSenses['notes'] = $sense->notes;
-                        }
-
-                        if (isset($sense->examples)) {
-                            $translationsSenses['examples'] = $sense->examples;
-                        }
-
-                        if (isset($sense->definitions)) {
-                            $translationsSenses['definitions'] = $sense->definitions;
+                        $translationsSenses = self::populateTranslationsSenses($sense, $translationsSenses);
+ 
+                        if (isset($sense->subsenses)) {
+                            foreach ($sense->subsenses as $subsense) {
+                                $translationsSenses = self::populateTranslationsSenses($subsense, $translationsSenses);
+                            }
                         }
 
                         $translations->senses[$lexicalEntry->lexicalCategory->id][] = $translationsSenses;
@@ -58,5 +50,30 @@ final class Translations implements Convertable
         }
 
         return $translations;
+    }
+
+    private static function populateTranslationsSenses(object $sense, array $translationsSenses): array
+    {
+        if (isset($sense->translations)) {
+            $translationsSenses['translations'] = $sense->translations;
+        }
+
+        if (isset($sense->notes)) {
+            $translationsSenses['notes'] = array_filter($sense->notes, function ($sense) { return $sense->type == 'indicator'; });
+        }
+
+        if (isset($sense->examples)) {
+            $translationsSenses['examples'] = $sense->examples;
+        }
+
+        if (isset($sense->definitions)) {
+            $translationsSenses['definitions'] = $sense->definitions;
+        }
+
+        if (isset($sense->crossReferences)) {
+            $translationsSenses['notes'] = $sense->crossReferences;
+        }
+
+        return $translationsSenses;
     }
 }

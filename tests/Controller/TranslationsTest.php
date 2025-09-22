@@ -30,7 +30,7 @@ class TranslationsTest extends Base
             'translations/index.html.twig',
             [
                 'selectedSourceLang' => 'en',
-                'selectedTargetLang' => 'it',
+                'selectedTargetLang' => 'es',
                 'sourceLangs' => [
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'it' => 'Italian', 'mr' => 'Marathi',

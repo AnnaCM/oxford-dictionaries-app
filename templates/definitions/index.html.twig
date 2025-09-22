@@ -1,29 +1,5 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-    <h1>
-        <div class="search-container" style="margin-left: 450px; margin-top: 10px; display: inline-flex;">
-            <input type="text" id="search_word_definition" placeholder="Search" name="search" size="40" style="height: 25px;">
-            <select id="select-definition-language" name="dict" style="height: 30px; background-color: #EBEEF5; padding: initial;">
-                {% for sourceLangKey, sourceLangValue in sourceLangs %}
-                    {% if sourceLangKey == selectedSourceLang %}
-                        <option value="{{ sourceLangKey }}" selected="selected">{{ sourceLangValue }}: Definition</option>
-                    {% else %}
-                        <option value="{{ sourceLangKey }}">{{ sourceLangValue }}: Definition</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <button type="button" style="height: 30px; background-color: #EBEEF5;">
-                <a href="#" class="js-search-definitions">
-                    <img src="{{ asset('images/search_icon.png') }}" height="20" alt="">
-                </a>
-            </button>
-        </div>
-    </h1>
-
-    {% block content %}{% endblock %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('js/search_definitions.js') }}"></script>
+    {% include 'definitions/content.html.twig' %}
 {% endblock %}

@@ -1,0 +1,100 @@
+{
+  "id": "appropriate",
+  "metadata": {
+    "operation": "translations",
+    "provider": "Oxford University Press",
+    "schema": "RetrieveTranslations"
+  },
+  "results": [
+    {
+      "id": "appropriate",
+      "language": "en",
+      "lexicalEntries": [
+        {
+          "derivatives": [
+            {
+              "id": "appropriately",
+              "text": "appropriately"
+            }
+          ],
+          "entries": [
+            {
+              "homographNumber": "100",
+              "pronunciations": [
+                {
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "u0259'pru0259u028apru026au0259t"
+                }
+              ],
+              "senses": [
+                {
+                  "id": "id461267c7-525c-4434-a208-0f8c65d77d22",
+                  "translations": [
+                    {
+                      "language": "el",
+                      "text": "u03bau03b1u03c4u03acu03bbu03bbu03b7u03bbu03bfu03c2"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "language": "en",
+          "lexicalCategory": {
+            "id": "adjective",
+            "text": "Adjective"
+          },
+          "text": "appropriate"
+        }
+      ],
+      "type": "headword",
+      "word": "appropriate"
+    },
+    {
+      "id": "appropriate",
+      "language": "en",
+      "lexicalEntries": [
+        {
+          "entries": [
+            {
+              "grammaticalFeatures": [
+                {
+                  "id": "transitive",
+                  "text": "Transitive",
+                  "type": "Subcategorization"
+                }
+              ],
+              "homographNumber": "200",
+              "pronunciations": [
+                {
+                  "phoneticNotation": "IPA",
+                  "phoneticSpelling": "u0259'pru0259u028apru026aeu026at"
+                }
+              ],
+              "senses": [
+                {
+                  "id": "idbbef4282-511d-4e71-a450-e1f1d64f7a87",
+                  "translations": [
+                    {
+                      "language": "el",
+                      "text": "u03bfu03b9u03bau03b5u03b9u03bfu03c0u03bfu03b9u03bfu03cdu03bcu03b1u03b9"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "language": "en",
+          "lexicalCategory": {
+            "id": "verb",
+            "text": "Verb"
+          },
+          "text": "appropriate"
+        }
+      ],
+      "type": "headword",
+      "word": "appropriate"
+    }
+  ],
+  "word": "appropriate"
+}

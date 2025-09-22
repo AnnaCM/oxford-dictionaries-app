@@ -22,7 +22,10 @@ class DefinitionsTest extends Base
             ->getMock();
     }
 
-    public function testIndex()
+    /**
+     * @dataProvider getPath
+     */
+    public function testIndex(string $path)
     {
         static::getContainer()->set(DefinitionsService::class, $this->definitionsServiceMock);
 
@@ -38,7 +41,15 @@ class DefinitionsTest extends Base
             ]
         );
 
-        $this->client->request('GET', '/definitions');
+        $this->client->request('GET', $path);
+    }
+
+    public function getPath(): array
+    {
+        return [
+            'homepage' => ['/'],
+            'definitions' => ['/definitions'],
+        ];
     }
 
     public function testDefinitions()

@@ -37,6 +37,7 @@ class Definitions extends Dictionary
         $responseData = $this->get("/words/{$sourceLang}", ['query' => ['q' => $word]]);
 
         $this->cache->set($cacheKey, $responseData);
+        $this->cache->zIncrBy('dictionary_words', 1, strtolower($word));
 
          return DefinitionsConverter::convert($responseData);
     }

@@ -46,6 +46,7 @@ class TranslationsTest extends TestCase
         $this->expectExceptionMessage('Invalid code for source language: fr');
         $this->cacheServiceMock->expects($this->never())->method('get');
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $this->translationsService->getTranslations('fr', 'en', 'alert');
     }
@@ -56,6 +57,7 @@ class TranslationsTest extends TestCase
         $this->expectExceptionMessage('Invalid code for target language: gu');
         $this->cacheServiceMock->expects($this->never())->method('get');
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $this->translationsService->getTranslations('en', 'gu', 'alert');
     }
@@ -66,6 +68,7 @@ class TranslationsTest extends TestCase
         $this->expectExceptionMessage('');
         $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Translations::getTranslations_ace_en_de')->willReturn(null);
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $definitionsService = new TranslationsService(
             $this->cacheServiceMock,
@@ -84,6 +87,7 @@ class TranslationsTest extends TestCase
         $this->expectExceptionMessage('');
         $this->cacheServiceMock->expects($this->once())->method('get')->with('App\Service\Translations::getTranslations_aaa_el_en')->willReturn(null);
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
         $definitionsService = new TranslationsService(
             $this->cacheServiceMock,
@@ -96,56 +100,72 @@ class TranslationsTest extends TestCase
         $definitionsService->getTranslations('el', 'en', 'aaa');
     }
 
-    public function testGetTranslationsReturnsValidResult()
-    {
+    /**
+     * @dataProvider getWordTranslations
+     */
+    public function testGetTranslationsReturnsValidResult(
+        string $word,
+        string $sourceLang,
+        string $targetLang,
+        array $result
+    ) {
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('get')
-            ->with('App\Service\Translations::getTranslations_alert_en_it')
+            ->with("App\Service\Translations::getTranslations_{$word}_{$sourceLang}_{$targetLang}")
             ->willReturn(null);
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('set')
             ->with(
-                'App\Service\Translations::getTranslations_alert_en_it',
-                json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json"))
+                "App\Service\Translations::getTranslations_{$word}_{$sourceLang}_{$targetLang}",
+                json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json"))
             );
+        $this->cacheServiceMock
+            ->expects($this->once())
+            ->method('zIncrBy')
+            ->with('dictionary_words', 1, $word);
 
-        $translations = $this->translationsService->getTranslations('en', 'it', 'alert');
-        $this->assertResult($translations);
+        if ($word != 'alert') {
+            $translationsService = new TranslationsService(
+                $this->cacheServiceMock,
+                $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json"), 200),
+                $this->endpoint,
+                $this->appId,
+                $this->appKey
+            );
+        } else {
+            $translationsService = $this->translationsService;
+        }
+
+        $translations = $translationsService->getTranslations($sourceLang, $targetLang, $word);
+        $this->assertInstanceOf(TranslationsEntity::class, $translations);
+        $this->assertSame($word, $translations->text);
+        $this->assertSame($result['pronunciations'], $translations->pronunciations);
+        $this->assertEquals($result['senses'], $translations->senses);
     }
 
     public function testGetTranslationsHitsCache()
     {
+        [$word, $sourceLang, $targetLang, $result] = $this->getWordTranslations()['alert'];
+
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('get')
-            ->with('App\Service\Translations::getTranslations_alert_en_it')
-            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json")));
+            ->with("App\Service\Translations::getTranslations_{$word}_{$sourceLang}_{$targetLang}")
+            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json")));
         $this->cacheServiceMock->expects($this->never())->method('set');
+        $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
-        $translations = $this->translationsService->getTranslations('en', 'it', 'alert');
-        $this->assertResult($translations);
+        $translations = $this->translationsService->getTranslations($sourceLang, $targetLang, $word);
+        $this->assertInstanceOf(TranslationsEntity::class, $translations);
+        $this->assertSame($word, $translations->text);
+        $this->assertSame($result['pronunciations'], $translations->pronunciations);
+        $this->assertEquals($result['senses'], $translations->senses);
     }
 
-    private function assertResult(object $translations)
+    public function getWordTranslations(): array
     {
-        $this->assertInstanceOf(TranslationsEntity::class, $translations);
-        $this->assertSame('alert', $translations->text);
-        $this->assertSame(
-            [
-                'UK' => [
-                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3',
-                    'phoneticSpelling' => 'əˈləːt'
-                ],
-                'US' => [
-                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3',
-                    'phoneticSpelling' => 'əˈlərt'
-                ]
-            ],
-            $translations->pronunciations
-        );
-
         $notes11 = new \stdClass();
         $notes11->text = 'lively';
         $notes11->type = 'indicator';
@@ -266,37 +286,135 @@ class TranslationsTest extends TestCase
         $examples51->text = 'to alert sb to';
         $examples51->translations = [$examplesTranslations51, $examplesTranslations52];
 
-        $this->assertEquals([
-            'adjective' => [
-                [
-                    'translations' => [$translations11, $translations12],
-                    'notes' => [$notes11]
+        $alertResult = [
+            'pronunciations' => [
+                'UK' => [
+                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3',
+                    'phoneticSpelling' => 'əˈləːt'
                 ],
-                [
-                    'translations' => [$translations21, $translations22],
-                    'notes' => [$notes21],
-                    'examples' => [$examples21]
+                'US' => [
+                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3',
+                    'phoneticSpelling' => 'əˈlərt'
                 ]
             ],
-            'noun' => [
-                [
-                    'translations' => [$translations31],
-                    'examples' => [
-                        $examples31,
-                        $examples32,
-                        $examples33,
-                        $examples34
+            'senses' => [
+                'adjective' => [
+                    [
+                        'translations' => [$translations11, $translations12],
+                        'notes' => [$notes11]
+                    ],
+                    [
+                        'translations' => [$translations21, $translations22],
+                        'notes' => [$notes21],
+                        'examples' => [$examples21]
+                    ]
+                ],
+                'noun' => [
+                    [
+                        'translations' => [$translations31],
+                        'examples' => [
+                            $examples31,
+                            $examples32,
+                            $examples33,
+                            $examples34
+                        ]
+                    ]
+                ],
+                'verb' => [
+                    [
+                        'translations' => [$translations41],
+                    ],
+                    [
+                        'examples' => [$examples51]
                     ]
                 ]
             ],
-            'verb' => [
-                [
-                    'translations' => [$translations41],
+        ];
+
+        $crossReferences11 = new \stdClass();
+        $crossReferences11->id = 'advertisement';
+        $crossReferences11->text = 'advertisement';
+        $crossReferences11->type = 'see also';
+
+        $notes11 = new \stdClass();
+        $notes11->text = 'written form';
+        $notes11->type = 'indicator';
+
+        $translations11 = new \stdClass();
+        $translations11->type = 'direct';
+        $translations11->language = 'es';
+        $translations11->text = 'despuu00e9s de Cristo';
+        $translations12 = new \stdClass();
+        $translations12->type = 'direct';
+        $translations12->language = 'es';
+        $translations12->text = 'dC';
+        $translations12->notes = [$notes11];
+        $translations13 = new \stdClass();
+        $translations13->type = 'direct';
+        $translations13->language = 'es';
+        $translations13->text = 'd. de C.';
+        $translations13->notes = [$notes11];
+        $translations14 = new \stdClass();
+        $translations14->type = 'direct';
+        $translations14->language = 'es';
+        $translations14->text = 'd. de J. C.';
+        $translations14->notes = [$notes11];
+
+        $adResult = [
+            'pronunciations' => [
+                'US' => [
+                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ad__1_us_1.mp3',
+                    'phoneticSpelling' => 'u00e6d'
                 ],
-                [
-                    'examples' => [$examples51]
-                ]
-            ]
-        ], $translations->senses);
+                'UK' => [
+                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/add__gb_2.mp3',
+                    'phoneticSpelling' => 'ad'
+                ],
+            ],
+            'senses' => [
+                'noun' => [
+                    [
+                        'notes' => [$crossReferences11],
+                    ]
+                ],
+                'adverb' => [
+                    [
+                        'translations' => [$translations11, $translations12, $translations13, $translations14],
+                        'definitions' => ['Anno Domini'],
+                    ]
+                ],
+            ],
+        ];
+
+        $translations11 = new \stdClass();
+        $translations11->language = 'el';
+        $translations11->text = 'u03bau03b1u03c4u03acu03bbu03bbu03b7u03bbu03bfu03c2';
+        $translations21 = new \stdClass();
+        $translations21->language = 'el';
+        $translations21->text = 'u03bfu03b9u03bau03b5u03b9u03bfu03c0u03bfu03b9u03bfu03cdu03bcu03b1u03b9';
+
+        $appropriateResult = [
+            'pronunciations' => [
+                ['phoneticSpelling' => 'u0259\'pru0259u028apru026au0259t'],
+            ],
+            'senses' => [
+                'adjective' => [
+                    [
+                        'translations' => [$translations11],
+                    ]
+                ],
+                'verb' => [
+                    [
+                        'translations' => [$translations21],
+                    ]
+                ],
+            ],
+        ];
+
+        return [
+            'alert' => ['alert', 'en', 'it', $alertResult],
+            'ad' => ['ad', 'en', 'es', $adResult],
+            'appropriate' => ['appropriate', 'en', 'el', $appropriateResult],
+        ];
     }
 }

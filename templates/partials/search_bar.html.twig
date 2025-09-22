@@ -1,0 +1,29 @@
+<nav class="search-bar">
+    <input type="text" id="search_word" placeholder="Search for a word…" autocomplete="off">
+    <select id="search_language">
+        {% if targetLangs is defined %}
+            {% for sourceLangKey, sourceLangValue in sourceLangs %}
+                <option disabled>--------{{ sourceLangValue }}--------</option>
+                {% for targetLangKey, targetLangValue in targetLangs %}
+                    {% if sourceLangKey != targetLangKey %}
+                        <option value="{{ sourceLangKey }} {{ targetLangKey }}"{% if sourceLangKey == selectedSourceLang and targetLangKey == selectedTargetLang %} selected{% endif %}>
+                            {{ sourceLangValue }}-{{ targetLangValue }}
+                        </option>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            {% for key, value in sourceLangs %}
+                <option value="{{ key }}"{% if key == selectedSourceLang %} selected{% endif %}>
+                    {{ value }}
+                </option>
+            {% endfor %}
+        {% endif %}
+    </select>
+    <button class="search-icon js-search-word" type="button">
+        <img src="{{ asset('images/search_icon.png') }}" height="20" alt="Search">
+    </button>
+    <button class="js-search-languages" data-mode="definitions">Definitions</button>
+    <button class="js-search-languages" data-mode="translations">Translations</button>
+    <ul id="suggestions"></ul>
+</nav>

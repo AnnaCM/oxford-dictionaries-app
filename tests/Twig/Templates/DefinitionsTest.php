@@ -18,7 +18,8 @@ class DefinitionsTest extends Base
         ];
 
         $haystack = $this->renderTemplate('definitions/index.html.twig', $options);
-        $this->assertContentDefinitionsIndexTemplateIsRendered($haystack);
+        $this->assertExtendsBaseTemplate($haystack);
+        $this->assertDefinitionsLanguagesAreRendered($haystack);
     }
 
     /**
@@ -26,7 +27,7 @@ class DefinitionsTest extends Base
      */
     public function testContentTemplate(array $options)
     {
-        $haystack = $this->renderTemplate('definitions/content.html.twig', $options);
+        $haystack = $this->renderTemplate('definitions/index.html.twig', $options);
         $this->assertStringContainsString($options['text'], $haystack);
         if (isset($options['sourceLangPhoneticSpelling'])) {
             $this->assertStringContainsString("/{$options['sourceLangPhoneticSpelling']}/", $haystack);
@@ -45,7 +46,8 @@ class DefinitionsTest extends Base
                 }
             }
         }
-        $this->assertContentDefinitionsIndexTemplateIsRendered($haystack);
+        $this->assertExtendsBaseTemplate($haystack);
+        $this->assertDefinitionsLanguagesAreRendered($haystack);
     }
 
     public function getOptions(): array

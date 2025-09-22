@@ -27,7 +27,8 @@ class TranslationsTest extends Base
         ];
 
         $haystack = $this->renderTemplate('translations/index.html.twig', $options);
-        $this->assertContentTranslationsIndexTemplateIsRendered($haystack);
+        $this->assertExtendsBaseTemplate($haystack);
+        $this->assertTranslationsLanguagesAreRendered($haystack);
     }
 
     /**
@@ -35,7 +36,7 @@ class TranslationsTest extends Base
      */
     public function testContentTemplate(array $options)
     {
-        $haystack = $this->renderTemplate('translations/content.html.twig', $options);
+        $haystack = $this->renderTemplate('translations/index.html.twig', $options);
         $this->assertStringContainsString($options['text'], $haystack);
         if (isset($options['pronunciations'])) {
             $dialect = array_keys($options['pronunciations'])[0];
@@ -69,7 +70,8 @@ class TranslationsTest extends Base
                 }
             }
         }
-        $this->assertContentTranslationsIndexTemplateIsRendered($haystack);
+        $this->assertExtendsBaseTemplate($haystack);
+        $this->assertTranslationsLanguagesAreRendered($haystack);
     }
 
     public function getOptions(): array
