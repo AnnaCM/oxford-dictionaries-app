@@ -18,7 +18,7 @@ Here’s a quick look at the app in action:
 
 - Fetch word definitions by language
 - Retrieve translations between supported language pairs
-- Autocomplete functionality for faster, smarter word lookups
+- Autocomplete functionality powered by Redis for faster, smarter word lookups
 - Caching with Redis for improved performance
 - Graceful API error handling with custom Twig templates
 - Functional test coverage for key routes and exception handling
@@ -31,6 +31,7 @@ Here’s a quick look at the app in action:
 - Composer
 - [Symfony CLI](https://symfony.com/download) *(recommended)*
 - An [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) account
+- Redis *(recommended for caching and autocomplete)*
 
 ---
 
