@@ -1,0 +1,84 @@
+{
+    "metadata": {
+      "operation": "retrieve",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveEntry"
+    },
+    "query": "ame\u0301liorer",
+    "results": [
+      {
+        "id": "am%C3%A9liorer",
+        "language": "fr",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "grammaticalFeatures": [
+                    {
+                      "id": "transitive",
+                      "text": "Transitive",
+                      "type": "Subcategorization"
+                    }
+                ],
+                "senses": [
+                  {
+                    "definitions": [
+                        "Rendre meilleur."
+                    ],
+                    "examples": [
+                      {
+                        "text": "Il a am\u00e9lior\u00e9 ce moteur."
+                      }
+                    ],
+                    "id": "idfbc289d8-d440-4368-9d06-84ab2bee594e",
+                    "synonyms": [
+                      {
+                        "language": "fr",
+                        "text": "perfectionner"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "grammaticalFeatures": [
+                  {
+                    "id": "pronominal",
+                    "text": "Pronominal",
+                    "type": "Subcategorization"
+                  }
+                ],
+                "senses": [
+                  {
+                    "definitions": [
+                      "Devenir meilleur."
+                    ],
+                    "examples": [
+                      {
+                        "text": "Ses notes se sont am\u00e9lior\u00e9es."
+                      }
+                    ],
+                    "id": "id909ad1dd-d4ef-4b2f-96e3-e8beee6278b4",
+                    "notes": [
+                      {
+                        "text": "\u00c0 la forme pronominale, le participe pass\u00e9 de ce verbe s'accorde toujours en genre et en nombre avec son sujet. \u00abSes r\u00e9sultats se sont consid\u00e9rablement am\u00e9lior\u00e9s\u00bb.",
+                        "type": "grammaticalNote"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "fr",
+            "lexicalCategory": {
+              "id": "verb",
+              "text": "Verb"
+            },
+            "text": "am\u00e9liorer"
+          }
+        ],
+        "type": "headword",
+        "word": "am\u00e9liorer"
+      }
+    ]
+}

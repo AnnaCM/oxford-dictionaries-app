@@ -1,23 +1,42 @@
 {% if text is defined %}
-    <h2 class="content-heading">{{ text }}</h2>
-    {% set pronunciation = "" %}
+    <h2 class="content-heading">
+        {{ text }}
+
+        {% set audioFile = false %}
+        {% if pronunciations ?? false %}
+            {% for dialect, phoneticSpellingAndAudioFile in pronunciations %}
+                {% if not audioFile %}
+                    {% if phoneticSpellingAndAudioFile['audioFile'] ?? false %}
+                        {% set audioFile = true %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if audioFile ?? false %}
+            {% include 'partials/audio_controls.html.twig' with { mode: 'translations' } %}
+        {% endif %}
+    </h2>
+    {% set phoneticSpelling = "" %}
     {% if pronunciations ?? false %}
-        {% for dialect, phoneticSpelling in pronunciations %}
-            {% if pronunciation is empty %}
-                {% if dialect matches '/[a-zA-Z]+$/' %}
-                    {% set pronunciation = dialect ~ ': ' %}
+        {% for dialect, phoneticSpellingAndAudioFile in pronunciations %}
+            {% if phoneticSpellingAndAudioFile['phoneticSpelling'] ?? false %}
+                {% if phoneticSpelling is empty %}
+                    {% if dialect matches '/[a-zA-Z]+$/' %}
+                        {% set phoneticSpelling = dialect ~ ': ' %}
+                    {% endif %}
+                    {% set phoneticSpelling = phoneticSpelling ~ '/' ~ phoneticSpellingAndAudioFile['phoneticSpelling'] ~ '/' %}
+                {% else %}
+                    {% if dialect matches '/[a-zA-Z]+$/' %}
+                        {% set phoneticSpelling = phoneticSpelling ~ '  |  ' ~ dialect ~ ': ' %}
+                    {% endif %}
+                    {% set phoneticSpelling = phoneticSpelling ~ '/' ~ phoneticSpellingAndAudioFile['phoneticSpelling'] ~ '/' %}
                 {% endif %}
-                {% set pronunciation = pronunciation ~ '/' ~ phoneticSpelling ~ '/' %}
-            {% else %}
-                {% if dialect matches '/[a-zA-Z]+$/' %}
-                    {% set pronunciation = pronunciation ~ '  |  ' ~ dialect ~ ': ' %}
-                {% endif %}
-                {% set pronunciation = pronunciation ~ '/' ~ phoneticSpelling ~ '/' %}
             {% endif %}
         {% endfor %}
     {% endif %}
-    {% if pronunciation ?? false %}
-        <p class="content-pronunciation">{{ pronunciation }}</p>
+    {% if phoneticSpelling ?? false %}
+        <p class="content-pronunciation">{{ phoneticSpelling }}</p>
     {% endif %}
     <table>
         {% for key, value in senses %}

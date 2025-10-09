@@ -34,7 +34,7 @@ class Definitions extends AbstractController
      *     "/definitions/{sourceLang}/{wordId}",
      *     name="definitionContent",
      *     methods={"GET"},
-     *     requirements={"sourceLang"="[a-z]{2}(-[a-z]{2})?", "wordId":"[a-z]++"}
+     *     requirements={"sourceLang"="[a-z]{2}(-[a-z]{2})?", "wordId":"[a-zà-ü]++"}
      * )
      */
     public function definitions(string $sourceLang, string $wordId): Response
@@ -57,11 +57,14 @@ class Definitions extends AbstractController
             'senses' => $data->senses
         ];
 
-        if (
-            count($data->pronunciations) &&
-            isset(array_values($data->pronunciations)[0]['phoneticSpelling'])
-        ) {
-            $parameters['sourceLangPhoneticSpelling'] = $data->pronunciations[array_keys($data->pronunciations)[0]]['phoneticSpelling'];
+        if (count($data->pronunciations)) {
+            if (isset(array_values($data->pronunciations)[0]['phoneticSpelling'])) {
+                $parameters['sourceLangPhoneticSpelling'] = $data->pronunciations[array_keys($data->pronunciations)[0]]['phoneticSpelling'];
+            }
+
+            if (isset(array_values($data->pronunciations)[0]['audioFile'])) {
+                $parameters['sourceLangAudioFile'] = $data->pronunciations[array_keys($data->pronunciations)[0]]['audioFile'];
+            }
         }
 
         return $this->render(

@@ -37,9 +37,10 @@ class Definitions extends Dictionary
         $responseData = $this->get("/words/{$sourceLang}", ['query' => ['q' => $word]]);
 
         $this->cache->set($cacheKey, $responseData);
-        $this->cache->zIncrBy('dictionary_words', 1, strtolower($word));
+        $keyPrefix = explode('-', $sourceLang)[0];
+        $this->cache->zIncrBy("{$keyPrefix}_dictionary_words", 1, mb_strtolower($word));
 
-         return DefinitionsConverter::convert($responseData);
+        return DefinitionsConverter::convert($responseData);
     }
 
     private function validateLanguageCode(string $sourceLang)

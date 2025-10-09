@@ -58,7 +58,12 @@ class DefinitionsTest extends Base
         $word = 'ace';
         $definitionsEntity = new DefinitionsEntity();
         $definitionsEntity->text = $word;
-        $definitionsEntity->pronunciations = ['UK' => ['phoneticSpelling' => 'eɪs']];
+        $definitionsEntity->pronunciations = [
+            'UK' => [
+                'phoneticSpelling' => 'eɪs',
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3'
+            ]
+        ];
         $example11 = new \stdClass();
         $example11->text = "the ace of diamonds";
         $example12 = new \stdClass();
@@ -144,7 +149,8 @@ class DefinitionsTest extends Base
                 ],
                 'text' => $word,
                 'senses' => $definitionsEntity->senses,
-                'sourceLangPhoneticSpelling' => $definitionsEntity->pronunciations['UK']['phoneticSpelling']
+                'sourceLangPhoneticSpelling' => $definitionsEntity->pronunciations['UK']['phoneticSpelling'],
+                'sourceLangAudioFile' => $definitionsEntity->pronunciations['UK']['audioFile']
             ]
         );
 
@@ -154,7 +160,7 @@ class DefinitionsTest extends Base
     public function testGetDefinitionsCatchesNotFoundExceptionAndRendersCustom404ErrorTemplate()
     {
         $sourceLang = 'es';
-        $word = 'xxxxxx';
+        $word = 'azuúcar';
 
         $this->definitionsServiceMock->expects($this->once())->method('getDefinitions')->with($sourceLang, $word)->willThrowException(new NotFoundError());
         static::getContainer()->set(DefinitionsService::class, $this->definitionsServiceMock);
@@ -178,7 +184,7 @@ class DefinitionsTest extends Base
     public function testGetDefinitionsBypassesExceptionSubscriberAndRendersCustomErrorTemplate()
     {
         $sourceLang = 'fr';
-        $word = 'brrr';
+        $word = 'agréable';
 
         $exception = new HttpException(500, 'Ops - Something went wrong!');
 

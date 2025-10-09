@@ -146,53 +146,66 @@ main#results-container {
   flex: 1;
 }
 
+.dialect-select {
+  padding: 0.08rem;
+  font-size: 1rem;
+  margin-left: -9px;
+}
+
 .error-heading {
-    text-align: center;
-    margin: 40px 0 10px 0;
+  text-align: center;
+  margin: 40px 0 10px 0;
 }
 
 .error-message {
-    text-align: center;
-    margin: 5px 0;
+  text-align: center;
+  margin: 5px 0;
+}
+
+.audio-error {
+  display: none;
+  font-size: 12px;
+  padding-top: 5px;
+  color: red;
 }
 
 .content-heading {
-    margin-left: 400px;
+  margin-left: 400px;
 }
 
 .content-subtext {
-    margin-left: 400px;
-    font-style: italic;
+  margin-left: 400px;
+  font-style: italic;
 }
 
 .content-pronunciation {
-    margin-left: 400px;
+  margin-left: 400px;
 }
 
 .content-example {
-    font-family: monospace;
+  font-family: monospace;
 }
 
 .content-table th {
-    text-align: left;
-    padding: 5px;
+  text-align: left;
+  padding: 5px;
 }
 
 .content-table td {
-    padding: 3px 5px;
-    vertical-align: top;
+  padding: 3px 5px;
+  vertical-align: top;
 }
 
 .definitions-list,
 .examples-list,
 .translations-list {
-    list-style-type: none;
-    padding-inline-start: 1px;
-    margin-block-start: 2px;
-    margin-block-end: 5px;
+  list-style-type: none;
+  padding-inline-start: 1px;
+  margin-block-start: 2px;
+  margin-block-end: 5px;
 }
 
 .examples-list {
-    border-bottom: 1px solid #ddd;
-    font-family: monospace;
+  border-bottom: 1px solid #ddd;
+  font-family: monospace;
 }

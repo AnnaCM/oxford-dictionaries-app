@@ -28,6 +28,11 @@ class RedisClient implements RedisClientInterface
         $this->client->setex($key, $ttl, $value);
     }
 
+    public function zAdd(string $key, array $options = [], float $value, string $member): void
+    {
+        $this->client->zAdd($key, ...$options, ...[$value, $member]);
+    }
+
     public function zIncrBy(string $key, float $value, string $member): void
     {
         $this->client->zIncrBy($key, $value, $member);

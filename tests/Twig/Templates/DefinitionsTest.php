@@ -32,6 +32,14 @@ class DefinitionsTest extends Base
         if (isset($options['sourceLangPhoneticSpelling'])) {
             $this->assertStringContainsString("/{$options['sourceLangPhoneticSpelling']}/", $haystack);
         }
+        if (isset($options['sourceLangAudioFile'])) {
+            $filename = explode('/', $options['sourceLangAudioFile'])[count(explode('/', $options['sourceLangAudioFile'])) - 1];
+            $this->assertStringContainsString('<button class="play-audio">', $haystack);
+            $this->assertStringContainsString('<img src="/images/volume.png" height="15" alt="Listen">', $haystack);
+            $this->assertStringContainsString('<audio hidden>', $haystack);
+            $this->assertStringContainsString('<source src="' . "/audio-proxy/{$filename}" . '" type="audio/mpeg">', $haystack);
+            $this->assertStringContainsString('<span class="audio-error"></span>', $haystack);
+        }
         foreach ($options['senses'] as $key => $value) {
             $this->assertStringContainsString($key, $haystack);
             if (isset($value['definitions'])) {
@@ -121,13 +129,14 @@ class DefinitionsTest extends Base
             ]
         ];
 
-        $optionsWithNoDefinitionsExamplesAndPhoneticSpelling = $options;
-        $optionsWithNoDefinitionsExamplesAndPhoneticSpelling['sourceLangPhoneticSpelling'] = 'eɪs';
-        $optionsWithNoDefinitionsExamplesAndPhoneticSpelling['senses'] = [];
+        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile = $options;
+        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['sourceLangPhoneticSpelling'] = 'eɪs';
+        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['sourceLangAudioFile'] = 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3';
+        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['senses'] = [];
 
         return [
             [$optionsWithMixDefinitionsExamplesAndNoPhoneticSpelling],
-            [$optionsWithNoDefinitionsExamplesAndPhoneticSpelling],
+            [$optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile],
         ];
     }
 }

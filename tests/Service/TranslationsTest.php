@@ -7,7 +7,7 @@ use App\Exception\NotFoundError;
 use App\Exception\ValidationError;
 use App\Service\CacheStore as CacheService;
 use App\Service\Translations as TranslationsService;
-use App\Tests\Service\Util\HttpMock;
+use App\Tests\Util\HttpMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +33,7 @@ class TranslationsTest extends TestCase
 
         $this->translationsService = new TranslationsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json"), 200),
+            $this->mockHttpClient(file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json"), 200),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -72,7 +72,7 @@ class TranslationsTest extends TestCase
 
         $definitionsService = new TranslationsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient($this->endpoint, '', 400),
+            $this->mockHttpClient('', 400),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -91,7 +91,7 @@ class TranslationsTest extends TestCase
 
         $definitionsService = new TranslationsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient($this->endpoint, '', 404),
+            $this->mockHttpClient('', 404),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -124,12 +124,12 @@ class TranslationsTest extends TestCase
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('zIncrBy')
-            ->with('dictionary_words', 1, $word);
+            ->with("{$sourceLang}_dictionary_words", 1, $word);
 
         if ($word != 'alert') {
             $translationsService = new TranslationsService(
                 $this->cacheServiceMock,
-                $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json"), 200),
+                $this->mockHttpClient(file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json"), 200),
                 $this->endpoint,
                 $this->appId,
                 $this->appKey
@@ -140,7 +140,7 @@ class TranslationsTest extends TestCase
 
         $translations = $translationsService->getTranslations($sourceLang, $targetLang, $word);
         $this->assertInstanceOf(TranslationsEntity::class, $translations);
-        $this->assertSame($word, $translations->text);
+        $this->assertSame($result['id'] ?? $word, $translations->text);
         $this->assertSame($result['pronunciations'], $translations->pronunciations);
         $this->assertEquals($result['senses'], $translations->senses);
     }
@@ -411,10 +411,65 @@ class TranslationsTest extends TestCase
             ],
         ];
 
+        $translations11 = new \stdClass();
+        $translations11->language = 'en';
+        $translations11->text = 'so that …';
+        $translations12 = new \stdClass();
+        $translations12->language = 'en';
+        $translations12->text = 'in order that …';
+        $examplesTranslations11 = new \stdClass();
+        $examplesTranslations11->language = 'en';
+        $examplesTranslations11->text = 'to take measures so that young people might find work';
+        $examples11 = new \stdClass();
+        $examples11->text = 'prendere delle misure affinché i giovani trovino lavoro';
+        $examples11->translations = [$examplesTranslations11];
+        $examplesTranslations12 = new \stdClass();
+        $examplesTranslations12->language = 'en';
+        $examplesTranslations12->text = 'she fixed the party for 3 so that Francesco could come';
+        $examples12 = new \stdClass();
+        $examples12->text = 'fissò la festa per le 3 affinché Francesco potesse venire';
+        $examples12->translations = [$examplesTranslations12];
+        $examplesTranslations13 = new \stdClass();
+        $examplesTranslations13->language = 'en';
+        $examplesTranslations13->text = 'to pay sb to do sth';
+        $examples13 = new \stdClass();
+        $examples13->text = 'pagare qcn affinché faccia qcs';
+        $examples13->translations = [$examplesTranslations13];
+        $examplesTranslations14 = new \stdClass();
+        $examplesTranslations14->language = 'en';
+        $examplesTranslations14->text = 'to be on one\'s guard against sth happening, to guard against sth happening';
+        $examples14 = new \stdClass();
+        $examples14->text = 'stare in guardia affinché qcs non accada';
+        $examples14->translations = [$examplesTranslations14];
+
+        $affinchéResult = [
+            'id' => 'affinche',
+            'pronunciations' => [
+                ['phoneticSpelling' => 'affinˈke'],
+            ],
+            'senses' => [
+                'conjunction' => [
+                    [
+                        'translations' => [
+                            $translations11,
+                            $translations12,
+                        ],
+                        'examples' => [
+                            $examples11,
+                            $examples12,
+                            $examples13,
+                            $examples14,
+                        ]
+                    ]
+                ]
+            ],
+        ];
+
         return [
             'alert' => ['alert', 'en', 'it', $alertResult],
             'ad' => ['ad', 'en', 'es', $adResult],
             'appropriate' => ['appropriate', 'en', 'el', $appropriateResult],
+            'affinché' => ['affinché', 'it', 'en', $affinchéResult],
         ];
     }
 }

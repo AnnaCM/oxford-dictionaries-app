@@ -1,6 +1,6 @@
 # 📚 Oxford Dictionaries API Integration
 
-This PHP application integrates with the [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), enabling users to fetch definitions, translations, and related linguistic data for supported words and languages.
+This PHP application integrates with the [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), enabling users to fetch definitions, translations, related linguistic data and audio pronunciations for supported words and languages.
 
 ---
 
@@ -18,8 +18,9 @@ Here’s a quick look at the app in action:
 
 - Fetch word definitions by language
 - Retrieve translations between supported language pairs
-- Autocomplete functionality powered by Redis for faster, smarter word lookups
-- Caching with Redis for improved performance
+- Listen to audio pronunciations for both definitions and translations (via proxy streaming to ensure CORS-safe playback)
+- Autocomplete powered by Redis, supporting accented characters across multiple languages
+- Caching with Redis for faster performance and fewer API requests
 - Graceful API error handling with custom Twig templates
 - Functional test coverage for key routes and exception handling
 
@@ -86,7 +87,7 @@ php bin/console app:load-dictionary-words
 ```
 
 This will:
-- import available words into Redis;
+- import available Unicode-safe dictionary words into Redis;
 - enable fast prefix-based searches for autocomplete.
 
 Redis is optional. If unavailable, the app logs a warning and continues to operate without caching or autocomplete.

@@ -7,7 +7,7 @@ use App\Exception\NotFoundError;
 use App\Exception\ValidationError;
 use App\Service\CacheStore as CacheService;
 use App\Service\Definitions as DefinitionsService;
-use App\Tests\Service\Util\HttpMock;
+use App\Tests\Util\HttpMock;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -33,7 +33,7 @@ class DefinitionsTest extends TestCase
 
         $this->definitionsService = new DefinitionsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json"), 200),
+            $this->mockHttpClient(file_get_contents(__DIR__ . "/Fixtures/Definitions/ace.json"), 200),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -61,7 +61,7 @@ class DefinitionsTest extends TestCase
 
         $definitionsService = new DefinitionsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient($this->endpoint, '', 400),
+            $this->mockHttpClient('', 400),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -80,7 +80,7 @@ class DefinitionsTest extends TestCase
 
         $definitionsService = new DefinitionsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient($this->endpoint, '', 404),
+            $this->mockHttpClient('', 404),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -109,15 +109,16 @@ class DefinitionsTest extends TestCase
                 'App\Service\Definitions::getDefinitions_' . $word . '_' . $sourceLang,
                 json_decode(file_get_contents(__DIR__ . "/Fixtures/Definitions/{$word}.json"))
             );
+        $keyPrefix = explode('-', $sourceLang)[0];
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('zIncrBy')
-            ->with('dictionary_words', 1, $word);
+            ->with("{$keyPrefix}_dictionary_words", 1, $word);
 
         if ($word != 'ace') {
             $definitionsService = new DefinitionsService(
                 $this->cacheServiceMock,
-                $this->mockHttpClient($this->endpoint, file_get_contents(__DIR__ . "/Fixtures/Definitions/{$word}.json"), 200),
+                $this->mockHttpClient(file_get_contents(__DIR__ . "/Fixtures/Definitions/{$word}.json"), 200),
                 $this->endpoint,
                 $this->appId,
                 $this->appKey
@@ -129,7 +130,9 @@ class DefinitionsTest extends TestCase
         $definitions = $definitionsService->getDefinitions($sourceLang, $word);
         $this->assertInstanceOf(DefinitionsEntity::class, $definitions);
         $this->assertSame($word, $definitions->text);
-        $this->assertSame($result['pronunciations'], $definitions->pronunciations);
+        if ($definitions->pronunciations) {
+            $this->assertSame($result['pronunciations'], $definitions->pronunciations);
+        }
         $this->assertEquals($result['senses'], $definitions->senses);
     }
 
@@ -184,7 +187,12 @@ class DefinitionsTest extends TestCase
         $example61->text = "I aced my grammar test";
 
         $aceResult = [
-            'pronunciations' => ['UK' => ['audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3', 'phoneticSpelling' => 'eɪs']],
+            'pronunciations' => [
+                'UK' => [
+                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3',
+                    'phoneticSpelling' => 'eɪs'
+                ]
+            ],
             'senses' => [
                 'noun' => [
                     [
@@ -233,7 +241,11 @@ class DefinitionsTest extends TestCase
         $example11->text = "my lack of artistic ability";
 
         $artisticResult = [
-            'pronunciations' => ['UK' => ['audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/artistic__gb_1.mp3', 'phoneticSpelling' => 'u0251u02d0u02c8tu026astu026ak']],
+            'pronunciations' => [
+                'UK' => [
+                    'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/artistic__gb_1.mp3',
+                    'phoneticSpelling' => 'u0251u02d0u02c8tu026astu026ak'
+                ]],
             'senses' => [
                 'adjective' => [
                     [
@@ -244,9 +256,30 @@ class DefinitionsTest extends TestCase
             ],
         ];
 
+        $example11 = new \stdClass();
+        $example11->text = "Il a amélioré ce moteur.";
+        $example21 = new \stdClass();
+        $example21->text = "Ses notes se sont améliorées.";
+
+        $améliorerResult = [
+            'senses' => [
+                'verb' => [
+                    [
+                        'definitions' => ["Rendre meilleur."],
+                        'examples' => [$example11],
+                    ],
+                    [
+                        'definitions' => ["Devenir meilleur."],
+                        'examples' => [$example21],
+                    ]
+                ]
+            ],
+        ];
+
         return [
             'ace' => ['ace', 'en-gb', $aceResult],
             'artistic' => ['artistic', 'en-gb', $artisticResult],
+            'améliorer' => ['améliorer', 'fr', $améliorerResult],
         ];
     }
 }

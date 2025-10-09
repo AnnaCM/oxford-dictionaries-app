@@ -1,5 +1,10 @@
 {% if text is defined %}
-    <h2 class="content-heading">{{ text }}</h2>
+    <h2 class="content-heading">
+        {{ text }}
+        {% if sourceLangAudioFile ?? false %}
+            {% include 'partials/audio_controls.html.twig' with { mode: 'definitions' } %}
+        {% endif %}
+    </h2>
     {% if sourceLangPhoneticSpelling ?? false %}
         <p class="content-pronunciation">/{{ sourceLangPhoneticSpelling }}/</p>
     {% endif %}

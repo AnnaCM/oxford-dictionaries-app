@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Twig\Environment;
 
-class ErrorPreviewController
+class ErrorPreview
 {
     private Environment $twig;
 

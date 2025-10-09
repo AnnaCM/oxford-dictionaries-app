@@ -37,7 +37,7 @@ class Translations extends AbstractController
      *     "/translations/{sourceLang}/{targetLang}/{wordId}",
      *     name="translationContent",
      *     methods={"GET"},
-     *     requirements={"sourceLang"="[a-z]{2}", "targetLang"="[a-z]{2}", "wordId":"[a-z]++"}
+     *     requirements={"sourceLang"="[a-z]{2}", "targetLang"="[a-z]{2}", "wordId":"[a-zà-ü]++"}
      * )
      */
     public function translations(string $sourceLang, string $targetLang, string $wordId): Response
@@ -64,7 +64,10 @@ class Translations extends AbstractController
             $parameters['pronunciations'] = [];
             foreach($data->pronunciations as $dialect => $pronunciation) {
                 if (in_array('phoneticSpelling', array_keys($pronunciation))) {
-                    $parameters['pronunciations'][$dialect] = $pronunciation['phoneticSpelling'];
+                    $parameters['pronunciations'][$dialect]['phoneticSpelling'] = $pronunciation['phoneticSpelling'];
+                }
+                if (in_array('audioFile', array_keys($pronunciation))) {
+                    $parameters['pronunciations'][$dialect]['audioFile'] = $pronunciation['audioFile'];
                 }
             }
         }

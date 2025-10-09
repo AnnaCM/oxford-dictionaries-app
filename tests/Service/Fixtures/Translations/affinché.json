@@ -1,0 +1,90 @@
+{
+    "id": "affinche",
+    "metadata": {
+      "operation": "translations",
+      "provider": "Oxford University Press",
+      "schema": "RetrieveTranslations"
+    },
+    "results": [
+      {
+        "id": "affinch%C3%A9",
+        "language": "it",
+        "lexicalEntries": [
+          {
+            "entries": [
+              {
+                "pronunciations": [
+                  {
+                    "phoneticNotation": "IPA",
+                    "phoneticSpelling": "affin\u02c8ke"
+                  }
+                ],
+                "senses": [
+                  {
+                    "examples": [
+                      {
+                        "text": "prendere delle misure affinch\u00e9 i giovani trovino lavoro",
+                        "translations": [
+                          {
+                            "language": "en",
+                            "text": "to take measures so that young people might find work"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "fiss\u00f2 la festa per le 3 affinch\u00e9 Francesco potesse venire",
+                        "translations": [
+                          {
+                            "language": "en",
+                            "text": "she fixed the party for 3 so that Francesco could come"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "pagare qcn affinch\u00e9 faccia qcs",
+                        "translations": [
+                          {
+                            "language": "en",
+                            "text": "to pay sb to do sth"
+                          }
+                        ]
+                      },
+                      {
+                        "text": "stare in guardia affinch\u00e9 qcs non accada",
+                        "translations": [
+                          {
+                            "language": "en",
+                            "text": "to be on one's guard against sth happening, to guard against sth happening"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "b-it-en0001046.002",
+                    "translations": [
+                      {
+                        "language": "en",
+                        "text": "so that \u2026"
+                      },
+                      {
+                        "language": "en",
+                        "text": "in order that \u2026"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "language": "it",
+            "lexicalCategory": {
+              "id": "conjunction",
+              "text": "Conjunction"
+            },
+            "text": "affinch\u00e9"
+          }
+        ],
+        "type": "headword",
+        "word": "affinch\u00e9"
+      }
+    ],
+    "word": "affinch\u00e9"
+}

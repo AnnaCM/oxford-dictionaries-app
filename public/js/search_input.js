@@ -18,12 +18,19 @@ export function mountSearch({ rootSelector = '.search-bar' }) {
     // INPUT (delegated to root)
     $root.on('input.search', '#search_word', debounce(function () {
         const query = $(this).val().trim();
+        var sourceLang = $root.find('#search_language').val() || '';
+        if (sourceLang.includes(' ')) {
+            sourceLang = sourceLang.split(" ")[0];
+        }
+        if (sourceLang.includes('-')) {
+            sourceLang = sourceLang.split("-")[0];
+        }
         currentIndex = -1;
 
         const $suggestions = $root.find('#suggestions').empty();
         if (query.length < 2) return;
 
-        $.getJSON('/autocomplete', { q: query })
+        $.getJSON('/autocomplete', { q: query, l: sourceLang })
         .done(words => {
             words.forEach(word => {
                 $('<li>').text(word).on('click', function () {

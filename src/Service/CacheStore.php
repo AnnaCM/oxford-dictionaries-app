@@ -19,15 +19,27 @@ class CacheStore
         $this->logger = $logger;
     }
 
+    public function exists(string $cacheKey): int
+    {
+        try {
+            $keyExists = $this->redis->exists($cacheKey);
+
+            $this->logger->info('Key ' . $cacheKey . ($keyExists ? '' : ' NOT') . ' found in REDIS');
+
+            return $keyExists;
+        } catch (ConnectionException $e) {
+            $this->logger->warning('Redis unavailable: ' . $e->getMessage());
+            // Continue without cache
+        }
+        return 0;
+    }
+
     public function get(string $cacheKey): ?object
     {
         try {
-            if ($this->redis->exists($cacheKey)) {
-                $this->logger->info("Value for key {$cacheKey} found in REDIS");
+            if ($this->exists($cacheKey)) {
                 return json_decode($this->redis->get($cacheKey));
             }
-
-            $this->logger->info("Value for key {$cacheKey} NOT found in REDIS");
         } catch (ConnectionException $e) {
             $this->logger->warning('Redis unavailable: ' . $e->getMessage());
             // Continue without cache
@@ -45,10 +57,20 @@ class CacheStore
         }
     }
 
+    public function zAdd(string $cacheKey, int $value, string $member, array $options = [])
+    {
+        try {
+            $this->logger->info("Adding member {$member} with score {$value} to the sorted set stored at key {$cacheKey}");
+            $this->redis->zAdd($cacheKey, $options, $value, $member);
+        } catch (ConnectionException $e) {
+            $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
+        }
+    }
+
     public function zIncrBy(string $cacheKey, int $value, string $member)
     {
         try {
-            $this->logger->info("Incrementing the score of {$member} from the sorted set {$cacheKey} by {$value}.");
+            $this->logger->info("Incrementing the score of {$member} from the sorted set {$cacheKey} by {$value}");
             $this->redis->zIncrBy($cacheKey, $value, $member);
         } catch (ConnectionException $e) {
             $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());

@@ -40,12 +40,27 @@ class TranslationsTest extends Base
         $this->assertStringContainsString($options['text'], $haystack);
         if (isset($options['pronunciations'])) {
             $dialect = array_keys($options['pronunciations'])[0];
-            $phoneticSpelling = array_values($options['pronunciations'])[0];
+            $phoneticSpelling = array_values($options['pronunciations'])[0]['phoneticSpelling'];
             $this->assertStringContainsString("{$dialect}: /{$phoneticSpelling}/", $haystack);
 
+            if (isset($options['pronunciations'][0]['audioFile'])) {
+                $filename = explode('/', $options['pronunciations'][0]['audioFile'])[count(explode('/', $options['pronunciations'][0]['audioFile'])) - 1];
+                $this->assertStringContainsString('<button class="play-audio">', $haystack);
+                $this->assertStringContainsString('<img src="/images/volume.png" height="15" alt="Listen">', $haystack);
+                $this->assertStringContainsString('<audio hidden>', $haystack);
+                $this->assertStringContainsString('<source type="audio/mpeg">', $haystack);
+                $this->assertStringContainsString('<select id="dialect" class="dialect-select">', $haystack);
+                $this->assertStringContainsString('<option value="' . "/audio-proxy/{$filename}" . '">' . $dialect . '</option>', $haystack);
+                $this->assertStringContainsString('<span class="audio-error"></span>', $haystack);
+            }
+
             if (count($options['pronunciations']) > 1) {
-                foreach (array_slice($options['pronunciations'], 1) as $dialect => $phoneticSpelling) {
-                    $this->assertStringContainsString("  |  {$dialect}: /{$phoneticSpelling}/", $haystack);
+                foreach (array_slice($options['pronunciations'], 1) as $dialect => $phoneticSpellingAudioPronunciations) {
+                    $this->assertStringContainsString("  |  {$dialect}: /{$phoneticSpellingAudioPronunciations['phoneticSpelling']}/", $haystack);
+                    if (isset($phoneticSpellingAudioPronunciations['audioFile'])) {
+                        $filename = explode('/', $phoneticSpellingAudioPronunciations['audioFile'])[count(explode('/', $phoneticSpellingAudioPronunciations['audioFile'])) - 1];
+                        $this->assertStringContainsString('<option value="' . "/audio-proxy/{$filename}" . '">' . $dialect . '</option>', $haystack);
+                    }
                 }
             }
         }
@@ -256,13 +271,21 @@ class TranslationsTest extends Base
         ];
 
         $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation = $options;
-        $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation['pronunciations'] = ['UK' => 'əˈləːt'];
+        $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation['pronunciations'] = [
+            'UK' => ['phoneticSpelling' => 'əˈləːt']
+        ];
         $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation['senses'] = [];
 
         $optionsWithNoTranslationsNotesAndExamplesAndTwoPronunciations = $options;
         $optionsWithNoTranslationsNotesAndExamplesAndTwoPronunciations['pronunciations'] = [
-            'UK' => 'əˈləːt',
-            'US' => 'əˈlərt'
+            'UK' => [
+                'phoneticSpelling' => 'əˈləːt',
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3'
+            ],
+            'US' => [
+                'phoneticSpelling' => 'əˈlərt',
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3'
+            ]
         ];
         $optionsWithNoTranslationsNotesAndExamplesAndTwoPronunciations['senses'] = [];
 

@@ -1,0 +1,24 @@
+<span class="audio-controls" data-mode="{{ mode }}">
+    <button class="play-audio">
+        <img src="{{ asset('images/volume.png') }}" height="15" alt="Listen">
+    </button>
+
+    {% if mode == "translations" %}
+        <audio hidden>
+            <source type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <select id="dialect" class="dialect-select">
+            {% for dialect, phoneticSpellingAndAudioFile in pronunciations %}
+                <option value="{{ path('audio_proxy', { filename: phoneticSpellingAndAudioFile['audioFile']|split('/')|last }) }}">{{ dialect }}</option>
+            {% endfor %}
+        </select>
+    {% else %} {# definitions mode #}
+        <audio hidden>
+            <source src="{{ path('audio_proxy', { filename: sourceLangAudioFile|split('/')|last }) }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    {% endif %}
+
+    <span class="audio-error"></span>
+</span>

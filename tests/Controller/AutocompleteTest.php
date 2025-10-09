@@ -23,27 +23,51 @@ class AutocompleteTest extends Base
         $this->cacheServiceMock->expects($this->never())->method('zRange');
         static::getContainer()->set(CacheService::class, $this->cacheServiceMock);
 
-        $this->client->request('GET', '/autocomplete?q=a');
+        $this->client->request('GET', '/autocomplete?q=a&l=en');
         $this->assertSame('[]', $this->client->getResponse()->getContent());
     }
 
-    public function testSuggestReturnsRelevantResult()
-    {
+    /**
+     * @dataProvider getQueryParams
+     */
+    public function testSuggestReturnsRelevantResult(
+        string $query,
+        string $sourceLang,
+        array $results,
+        string $expectedJsonResult
+    ) {
         $this->cacheServiceMock->expects($this->once())
             ->method('zRange')
-            ->with('dictionary_words', 0, -1, ['REV'])
-            ->willReturn([
+            ->with("{$sourceLang}_dictionary_words", 0, -1, ['REV'])
+            ->willReturn($results);
+        static::getContainer()->set(CacheService::class, $this->cacheServiceMock);
+
+        $this->client->request('GET', "/autocomplete?q={$query}&l={$sourceLang}");
+        $this->assertSame($expectedJsonResult, $this->client->getResponse()->getContent());
+    }
+
+    public function getQueryParams(): array
+    {
+        $enResults = [
             'age', 'aged', 'agency', 'agenda', 'agent', 'aggravation', 'aggressive', 'ago',
             'agree', 'agreement', 'agriculture', 'ah', 'ahead', 'aid', 'aim', 'air',
             'airplane', 'airport', 'aisle', 'alacrity', 'alarm', 'alcohol', 'alert', 'alibi',
             'alimony', 'alive', 'all', 'allergy', 'allow', 'allowance', 'almost', 'alone'
-        ]);
-        static::getContainer()->set(CacheService::class, $this->cacheServiceMock);
+        ];
+        $expectedEnJsonResult = '["alacrity","alarm","alcohol","alert","alibi"]';
 
-        $this->client->request('GET', '/autocomplete?q=al');
-        $this->assertSame(
-            '["alacrity","alarm","alcohol","alert","alibi"]',
-            $this->client->getResponse()->getContent()
-        );
+        $frResults = [
+            'aîné', 'améliorer', 'aimer', 'aéroport', 'automne', 'architecture', 'apéro',
+            'anecdoté', 'ananas', 'amour', 'amie', 'ami', 'alphabet', 'allée', 'ajouter',
+            'aimable', 'aiguille', 'agréable', 'affamé', 'adorable', 'addition', 'actrice',
+            'acrobatie', 'accordéon', 'absolument', 'abricot', 'abeille'
+        ];
+        $expectedFrJsonResult = '["am\u00e9liorer","amour","amie","ami"]';
+
+
+        return [
+            'en source language' => ['al', 'en', $enResults, $expectedEnJsonResult],
+            'fr source language with accented characters' => ['am', 'fr', $frResults, $expectedFrJsonResult],
+        ];
     }
 }

@@ -93,8 +93,14 @@ class TranslationsTest extends Base
         $translationsEntity = new TranslationsEntity();
         $translationsEntity->text = $word;
         $translationsEntity->pronunciations = [
-            'UK' => ['phoneticSpelling' => 'ɔːˈθɛntɪk'],
-            'US' => ['phoneticSpelling' => 'ɔˈθɛn(t)ɪk']
+            'UK' => [
+                'phoneticSpelling' => 'ɔːˈθɛntɪk',
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/authentic_gb_1.mp3'
+            ],
+            'US' => [
+                'phoneticSpelling' => 'ɔˈθɛn(t)ɪk',
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/authentic_us_1.mp3'
+            ]
         ];
         $translationsEntity->senses = [
             'adjective' => [
@@ -132,10 +138,7 @@ class TranslationsTest extends Base
                 ],
                 'text' => $word,
                 'senses' => $translationsEntity->senses,
-                'pronunciations' => [
-                    'UK' => $translationsEntity->pronunciations['UK']['phoneticSpelling'],
-                    'US' => $translationsEntity->pronunciations['US']['phoneticSpelling'],
-                ]
+                'pronunciations' => $translationsEntity->pronunciations
             ]
         );
 
@@ -146,7 +149,7 @@ class TranslationsTest extends Base
     {
         $sourceLang = 'es';
         $targetLang = 'ro';
-        $word = 'xxxxxx';
+        $word = 'añnaadir';
         $this->translationsServiceMock->expects($this->once())->method('getTranslations')->with($sourceLang, $targetLang, $word)->willThrowException(new NotFoundError());
         static::getContainer()->set(TranslationsService::class, $this->translationsServiceMock);
 
