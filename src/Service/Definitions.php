@@ -10,16 +10,13 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Definitions extends Dictionary
 {
-    private CacheStoreService $cache;
-
     public function __construct(
-        CacheStoreService $cache,
+        private CacheStoreService $cache,
         HttpClientInterface $client,
         string $serverHost,
         string $appId,
         string $appKey
     ) {
-        $this->cache = $cache;
         parent::__construct($client, $serverHost, $appId, $appKey);
     }
 

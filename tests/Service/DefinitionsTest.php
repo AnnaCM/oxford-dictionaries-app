@@ -155,7 +155,7 @@ class DefinitionsTest extends TestCase
         $this->assertEquals($result['senses'], $definitions->senses);
     }
 
-    public function getWordDefinitions(): array
+    public static function getWordDefinitions(): array
     {
         $example11 = new \stdClass();
         $example11->text = "the ace of diamonds";

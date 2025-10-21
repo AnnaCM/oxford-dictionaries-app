@@ -28,7 +28,7 @@ Here’s a quick look at the app in action:
 
 ## 🛠 Requirements
 
-- PHP `^7.4.5`
+- PHP `^8.1`
 - Composer
 - [Symfony CLI](https://symfony.com/download) *(recommended)*
 - An [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) account
@@ -112,7 +112,7 @@ Then open your browser at: http://localhost:8000
 
 To execute the test suite:
 ```bash
-php bin/phpunit
+./vendor/bin/phpunit
 ```
 
 Ensure you have development dependencies installed:

@@ -44,7 +44,7 @@ class DefinitionsTest extends Base
         $this->client->request('GET', $path);
     }
 
-    public function getPath(): array
+    public static function getPath(): array
     {
         return [
             'homepage' => ['/'],
@@ -149,8 +149,7 @@ class DefinitionsTest extends Base
                 ],
                 'text' => $word,
                 'senses' => $definitionsEntity->senses,
-                'sourceLangPhoneticSpelling' => $definitionsEntity->pronunciations['UK']['phoneticSpelling'],
-                'sourceLangAudioFile' => $definitionsEntity->pronunciations['UK']['audioFile']
+                'pronunciations' => $definitionsEntity->pronunciations,
             ]
         );
 

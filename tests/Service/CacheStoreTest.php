@@ -37,10 +37,10 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Key key found in REDIS');
+            ->with('Key "key" found in Redis');
 
         $keyExists = $this->cacheService->exists($key);
-        $this->assertSame(1, $keyExists);
+        $this->assertTrue($keyExists);
     }
 
     public function testExistsDoesntFindKey()
@@ -56,10 +56,10 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Key key NOT found in REDIS');
+            ->with('Key "key" NOT found in Redis');
 
         $keyExists = $this->cacheService->exists($key);
-        $this->assertSame(0, $keyExists);
+        $this->assertFalse($keyExists);
     }
 
     public function testExistsLogsWarningAndHandlesException()
@@ -80,7 +80,7 @@ class CacheStoreTest extends TestCase
             ->with('Redis unavailable: ' . $exceptionMessage);
 
         $keyExists = $this->cacheService->exists($key);
-        $this->assertSame(0, $keyExists);
+        $this->assertFalse($keyExists);
     }
 
     public function testGetFindsCacheKey()
@@ -96,7 +96,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Key key found in REDIS');
+            ->with('Key "key" found in Redis');
 
         $this->redisClientInterfaceMock
             ->expects($this->once())
@@ -121,7 +121,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Key key NOT found in REDIS');
+            ->with('Key "key" NOT found in Redis');
 
         $this->redisClientInterfaceMock
             ->expects($this->never())
@@ -164,7 +164,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Setting value for key key in REDIS');
+            ->with('Setting value for key "key" in Redis');
 
         $this->redisClientInterfaceMock
             ->expects($this->once())
@@ -204,7 +204,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Adding member ' . $member . ' with score ' . $value . ' to the sorted set stored at key ' . $cacheKey);
+            ->with('Adding member ' . $member . ' with score ' . $value . ' to sorted set ' . $cacheKey);
 
         $this->redisClientInterfaceMock
             ->expects($this->once())
@@ -225,7 +225,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('warning')
-            ->with('Could not cache to Redis: ' . $exceptionMessage);
+            ->with('Could not write to Redis: ' . $exceptionMessage);
 
         $this->redisClientInterfaceMock
             ->expects($this->once())
@@ -245,7 +245,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('info')
-            ->with('Incrementing the score of ' . $member . ' from the sorted set ' . $cacheKey . ' by ' . $value);
+            ->with('Incrementing score of ' . $member . ' in ' . $cacheKey . ' by ' . $value);
 
         $this->redisClientInterfaceMock
             ->expects($this->once())
@@ -266,7 +266,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('warning')
-            ->with('Could not cache to Redis: ' . $exceptionMessage);
+            ->with('Could not write to Redis: ' . $exceptionMessage);
 
         $this->redisClientInterfaceMock
             ->expects($this->once())
@@ -304,7 +304,7 @@ class CacheStoreTest extends TestCase
         $this->loggerMock
             ->expects($this->once())
             ->method('warning')
-            ->with('Could not cache to Redis: ' . $exceptionMessage);
+            ->with('Could not read from Redis: ' . $exceptionMessage);
 
         $this->redisClientInterfaceMock
             ->expects($this->once())

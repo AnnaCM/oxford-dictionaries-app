@@ -20,10 +20,7 @@ trait HttpMock
         return new MockHttpClient($mockResponse);
     }
 
-    /**
-     * array|callback $responsesOrCallbacks
-     */
-    protected function mockHttpSequence($responsesOrCallbacks): MockHttpClient
+    protected function mockHttpSequence(array|callable $responsesOrCallbacks): MockHttpClient
     {
         return new MockHttpClient($responsesOrCallbacks);
     }

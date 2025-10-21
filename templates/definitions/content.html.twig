@@ -1,12 +1,18 @@
 {% if text is defined %}
     <h2 class="content-heading">
         {{ text }}
-        {% if sourceLangAudioFile ?? false %}
-            {% include 'partials/audio_controls.html.twig' with { mode: 'definitions' } %}
+
+        {% if pronunciations ?? false %}
+            {% if pronunciations[pronunciations|keys|first]['audioFile'] ?? false %}
+                {% include 'partials/audio_controls.html.twig' with { mode: 'definitions' } %}
+            {% endif %}
         {% endif %}
     </h2>
-    {% if sourceLangPhoneticSpelling ?? false %}
-        <p class="content-pronunciation">/{{ sourceLangPhoneticSpelling }}/</p>
+    {% if pronunciations ?? false %}
+        {% set dialect = pronunciations|keys|first %}
+        {% if pronunciations[dialect]['phoneticSpelling'] ?? false %}
+            <p class="content-pronunciation">/{{ pronunciations[dialect]['phoneticSpelling'] }}/</p>
+        {% endif %}
     {% endif %}
     <table>
         <ol>

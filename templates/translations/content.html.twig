@@ -25,13 +25,13 @@
                     {% if dialect matches '/[a-zA-Z]+$/' %}
                         {% set phoneticSpelling = dialect ~ ': ' %}
                     {% endif %}
-                    {% set phoneticSpelling = phoneticSpelling ~ '/' ~ phoneticSpellingAndAudioFile['phoneticSpelling'] ~ '/' %}
                 {% else %}
+                    {% set phoneticSpelling = phoneticSpelling ~ '  |  ' %}
                     {% if dialect matches '/[a-zA-Z]+$/' %}
-                        {% set phoneticSpelling = phoneticSpelling ~ '  |  ' ~ dialect ~ ': ' %}
+                        {% set phoneticSpelling = phoneticSpelling ~ dialect ~ ': ' %}
                     {% endif %}
-                    {% set phoneticSpelling = phoneticSpelling ~ '/' ~ phoneticSpellingAndAudioFile['phoneticSpelling'] ~ '/' %}
                 {% endif %}
+                {% set phoneticSpelling = phoneticSpelling ~ '/' ~ phoneticSpellingAndAudioFile['phoneticSpelling'] ~ '/' %}
             {% endif %}
         {% endfor %}
     {% endif %}

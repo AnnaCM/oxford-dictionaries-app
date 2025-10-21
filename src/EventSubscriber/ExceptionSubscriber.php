@@ -8,12 +8,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    private ExceptionHandler $exceptionHandler;
-
-    public function __construct(ExceptionHandler $handler)
-    {
-        $this->exceptionHandler = $handler;
-    }
+    public function __construct(private ExceptionHandler $handler) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -26,7 +21,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
 
-        $response = $this->exceptionHandler->handle($exception);
+        $response = $this->handler->handle($exception);
 
         if ($response) {
             $event->setResponse($response);

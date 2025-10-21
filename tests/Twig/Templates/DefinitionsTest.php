@@ -58,7 +58,7 @@ class DefinitionsTest extends Base
         $this->assertDefinitionsLanguagesAreRendered($haystack);
     }
 
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         $example11 = new \stdClass();
         $example11->text = "the ace of diamonds";
@@ -85,8 +85,8 @@ class DefinitionsTest extends Base
             ],
         ];
 
-        $optionsWithMixDefinitionsExamplesAndNoPhoneticSpelling = $options;
-        $optionsWithMixDefinitionsExamplesAndNoPhoneticSpelling['senses'] = [
+        $optionsWithMixDefinitionsExamplesAndNoPhoneticSpellingOrAudioFile = $options;
+        $optionsWithMixDefinitionsExamplesAndNoPhoneticSpellingOrAudioFile['senses'] = [
             'noun' => [
                 [
                     'definitions' => [
@@ -130,12 +130,16 @@ class DefinitionsTest extends Base
         ];
 
         $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile = $options;
-        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['sourceLangPhoneticSpelling'] = 'eɪs';
-        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['sourceLangAudioFile'] = 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3';
+        $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['pronunciations'] = [
+            'UK' => [
+                'phoneticSpelling' => 'eɪs',
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3',
+            ]
+        ];
         $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['senses'] = [];
 
         return [
-            [$optionsWithMixDefinitionsExamplesAndNoPhoneticSpelling],
+            [$optionsWithMixDefinitionsExamplesAndNoPhoneticSpellingOrAudioFile],
             [$optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile],
         ];
     }

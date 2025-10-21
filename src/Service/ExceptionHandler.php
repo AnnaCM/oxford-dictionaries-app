@@ -9,14 +9,10 @@ use Twig\Environment;
 
 class ExceptionHandler
 {
-    private Environment $twig;
-    private LoggerInterface $logger;
-
-    public function __construct(Environment $twig, LoggerInterface $logger)
-    {
-        $this->twig = $twig;
-        $this->logger = $logger;
-    }
+    public function __construct(
+        private Environment $twig,
+        private LoggerInterface $logger
+    ) {}
 
     public function handle(\Throwable $exception): ?Response
     {

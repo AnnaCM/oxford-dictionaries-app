@@ -164,7 +164,7 @@ class TranslationsTest extends TestCase
         $this->assertEquals($result['senses'], $translations->senses);
     }
 
-    public function getWordTranslations(): array
+    public static function getWordTranslations(): array
     {
         $notes11 = new \stdClass();
         $notes11->text = 'lively';

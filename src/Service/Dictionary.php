@@ -9,11 +9,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class Dictionary
 {
-    private HttpClientInterface $client;
-    private string $serverHost;
-    private string $appId;
-    private string $appKey;
-
     const ALLOWED_DEFINITIONS_SOURCE_LANGS = [
         'en-gb' => 'English', 'en-us' => 'American', 'es' => 'Spanish',
         'fr' => 'French', 'gu' => 'Gujarati', 'hi' => 'Hindi', 'lv' => 'Latvian',
@@ -39,16 +34,11 @@ class Dictionary
     const DEFAULT_TRANSLATIONS_TARGET_LANG = 'es';
 
     public function __construct(
-        HttpClientInterface $client,
-        string $serverHost,
-        string $appId,
-        string $appKey
+        private HttpClientInterface $client,
+        private string $serverHost,
+        private string $appId,
+        private string $appKey
     ) {
-        $this->client = $client;
-        $this->serverHost = $serverHost;
-        $this->appId = $appId;
-        $this->appKey = $appKey;
-
         if (empty(trim($this->appId)) || empty(trim($this->appKey))) {
             throw new InvalidArgumentException("Authentication parameters missing. Check your .env file and make sure your App ID and App key are not blank!");
         }

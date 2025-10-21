@@ -7,31 +7,21 @@ use Psr\Log\LoggerInterface;
 
 class CacheStore
 {
-    /** @var \Predis\Client */
-    private $redis;
+    public function __construct(
+        private RedisClientInterface $redis,
+        private LoggerInterface $logger
+    ) {}
 
-    /** @var \Psr\Log\LoggerInterface */
-    private $logger;
-
-    public function __construct(RedisClientInterface $redis, LoggerInterface $logger)
-    {
-        $this->redis = $redis;
-        $this->logger = $logger;
-    }
-
-    public function exists(string $cacheKey): int
+    public function exists(string $cacheKey): bool
     {
         try {
-            $keyExists = $this->redis->exists($cacheKey);
-
-            $this->logger->info('Key ' . $cacheKey . ($keyExists ? '' : ' NOT') . ' found in REDIS');
-
-            return $keyExists;
+            $exists = $this->redis->exists($cacheKey);
+            $this->logger->info(sprintf('Key "%s"%s found in Redis', $cacheKey, $exists ? '' : ' NOT'));
+            return $exists;
         } catch (ConnectionException $e) {
             $this->logger->warning('Redis unavailable: ' . $e->getMessage());
-            // Continue without cache
+            return false;
         }
-        return 0;
     }
 
     public function get(string $cacheKey): ?object
@@ -42,47 +32,47 @@ class CacheStore
             }
         } catch (ConnectionException $e) {
             $this->logger->warning('Redis unavailable: ' . $e->getMessage());
-            // Continue without cache
         }
         return null;
     }
 
-    public function set(string $cacheKey, object $result)
+    public function set(string $cacheKey, object $result): void
     {
         try {
-            $this->logger->info("Setting value for key {$cacheKey} in REDIS");
-            $this->redis->setex($cacheKey, 86400, json_encode($result)); // Cache for 24 hours
+            $this->logger->info(sprintf('Setting value for key "%s" in Redis', $cacheKey));
+            $this->redis->setex($cacheKey, 86400, json_encode($result, JSON_UNESCAPED_UNICODE));
         } catch (ConnectionException $e) {
             $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
         }
     }
 
-    public function zAdd(string $cacheKey, int $value, string $member, array $options = [])
+    public function zAdd(string $cacheKey, int $value, string $member, array $options = []): void
     {
         try {
-            $this->logger->info("Adding member {$member} with score {$value} to the sorted set stored at key {$cacheKey}");
+            $this->logger->info("Adding member {$member} with score {$value} to sorted set {$cacheKey}");
             $this->redis->zAdd($cacheKey, $options, $value, $member);
         } catch (ConnectionException $e) {
-            $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
+            $this->logger->warning('Could not write to Redis: ' . $e->getMessage());
         }
     }
 
-    public function zIncrBy(string $cacheKey, int $value, string $member)
+    public function zIncrBy(string $cacheKey, int $value, string $member): void
     {
         try {
-            $this->logger->info("Incrementing the score of {$member} from the sorted set {$cacheKey} by {$value}");
+            $this->logger->info("Incrementing score of {$member} in {$cacheKey} by {$value}");
             $this->redis->zIncrBy($cacheKey, $value, $member);
         } catch (ConnectionException $e) {
-            $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
+            $this->logger->warning('Could not write to Redis: ' . $e->getMessage());
         }
     }
 
-    public function zRange(string $cacheKey, int $start, int $end, array $options = [])
+    public function zRange(string $cacheKey, int $start, int $end, array $options = []): array
     {
         try {
             return $this->redis->zRange($cacheKey, $start, $end, $options);
         } catch (ConnectionException $e) {
-            $this->logger->warning('Could not cache to Redis: ' . $e->getMessage());
+            $this->logger->warning('Could not read from Redis: ' . $e->getMessage());
+            return [];
         }
     }
 }

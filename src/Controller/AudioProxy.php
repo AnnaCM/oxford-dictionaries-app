@@ -4,21 +4,15 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class AudioProxy
 {
-    private HttpClientInterface $client;
+    public function __construct(private HttpClientInterface $client) {}
 
-    public function __construct(HttpClientInterface $client)
-    {
-        $this->client = $client;
-    }
 
-    /**
-     * @Route("/audio-proxy/{filename}", name="audio_proxy", requirements={"filename"=".+"})
-     */
+    #[Route('/audio-proxy/{filename<.+>}', name: 'audio_proxy', methods: ["GET"])]
     public function stream(string $filename): Response
     {
         $url = "https://audio.oxforddictionaries.com/en/mp3/{$filename}";

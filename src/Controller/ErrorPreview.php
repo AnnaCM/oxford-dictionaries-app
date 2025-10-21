@@ -3,21 +3,15 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 
 class ErrorPreview
 {
-    private Environment $twig;
+    public function __construct(private Environment $twig) {}
 
-    public function __construct(Environment $twig)
-    {
-        $this->twig = $twig;
-    }
 
-    /**
-     * @Route("/_error/{code}/{context}", name="error_preview", methods={"GET"})
-     */
+    #[Route('/_error/{code}/{context}', name: 'error_preview', methods: ["GET"])]
     public function show(int $code, string $context = null): Response
     {
         $template = sprintf('exceptions/error%d.html.twig', $code);

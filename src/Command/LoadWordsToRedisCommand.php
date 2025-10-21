@@ -12,15 +12,11 @@ class LoadWordsToRedisCommand extends Command
 {
     protected static $defaultName = 'app:load-dictionary-words';
 
-    private CacheStoreService $cache;
-
-    private DictionaryService $dictionaryService;
-
-    public function __construct(CacheStoreService $cache, DictionaryService $dictionaryService)
-    {
+    public function __construct(
+        private CacheStoreService $cache,
+        private DictionaryService $service
+    ) {
         parent::__construct();
-        $this->cache = $cache;
-        $this->service = $dictionaryService;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

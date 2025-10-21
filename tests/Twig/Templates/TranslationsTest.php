@@ -89,7 +89,7 @@ class TranslationsTest extends Base
         $this->assertTranslationsLanguagesAreRendered($haystack);
     }
 
-    public function getOptions(): array
+    public static function getOptions(): array
     {
         $notes11 = new \stdClass();
         $notes11->text = 'lively';

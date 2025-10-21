@@ -7,20 +7,14 @@ use App\Exception\NotFoundError;
 use App\Service\Definitions as DefinitionsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class Definitions extends AbstractController
 {
-    private DefinitionsService $service;
+    public function __construct(private DefinitionsService $service) {}
 
-    public function __construct(DefinitionsService $service)
-    {
-        $this->service = $service;
-    }
 
-    /**
-     * @Route(path={"/", "/definitions"}, name="definitions", methods={"GET"})
-     */
+    #[Route(['/', '/definitions'], name: 'definitions', methods: ["GET"])]
     public function index(): Response
     {
         return $this->render(
@@ -29,14 +23,12 @@ class Definitions extends AbstractController
         );
     }
 
-    /**
-     * @Route(
-     *     "/definitions/{sourceLang}/{wordId}",
-     *     name="definitionContent",
-     *     methods={"GET"},
-     *     requirements={"sourceLang"="[a-z]{2}(-[a-z]{2})?", "wordId":"[a-zà-ü]++"}
-     * )
-     */
+
+    #[Route(
+        '/definitions/{sourceLang<[a-z]{2}(-[a-z]{2})?>}/{wordId<[a-zà-ü]++>}',
+        name: 'definitionContent',
+        methods: ["GET"]
+    )]
     public function definitions(string $sourceLang, string $wordId): Response
     {
         try {
@@ -52,24 +44,16 @@ class Definitions extends AbstractController
             throw $e;
         }
 
-        $parameters = [
-            'text' => $wordId,
-            'senses' => $data->senses
-        ];
-
-        if (count($data->pronunciations)) {
-            if (isset(array_values($data->pronunciations)[0]['phoneticSpelling'])) {
-                $parameters['sourceLangPhoneticSpelling'] = $data->pronunciations[array_keys($data->pronunciations)[0]]['phoneticSpelling'];
-            }
-
-            if (isset(array_values($data->pronunciations)[0]['audioFile'])) {
-                $parameters['sourceLangAudioFile'] = $data->pronunciations[array_keys($data->pronunciations)[0]]['audioFile'];
-            }
-        }
-
         return $this->render(
             'definitions/content.html.twig',
-            array_merge($parameters, $this->getParameters($sourceLang))
+            array_merge(
+                [
+                    'text' => $wordId,
+                    'senses' => $data->senses,
+                    'pronunciations' => $data->pronunciations
+                ],
+                $this->getParameters($sourceLang)
+            )
         );
     }
 

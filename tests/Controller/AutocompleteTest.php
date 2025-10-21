@@ -46,7 +46,7 @@ class AutocompleteTest extends Base
         $this->assertSame($expectedJsonResult, $this->client->getResponse()->getContent());
     }
 
-    public function getQueryParams(): array
+    public static function getQueryParams(): array
     {
         $enResults = [
             'age', 'aged', 'agency', 'agenda', 'agent', 'aggravation', 'aggressive', 'ago',

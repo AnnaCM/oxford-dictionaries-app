@@ -7,20 +7,13 @@ use App\Exception\NotFoundError;
 use App\Service\Translations as TranslationsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class Translations extends AbstractController
 {
-    private TranslationsService $service;
+    public function __construct(private TranslationsService $service) {}
 
-    public function __construct(TranslationsService $service)
-    {
-        $this->service = $service;
-    }
-
-    /**
-     * @Route("/translations", name="translations", methods={"GET"})
-     */
+    #[Route('/translations', name: 'translations', methods: ["GET"])]
     public function index(): Response
     {
         return $this->render(
@@ -32,14 +25,11 @@ class Translations extends AbstractController
         );
     }
 
-    /**
-     * @Route(
-     *     "/translations/{sourceLang}/{targetLang}/{wordId}",
-     *     name="translationContent",
-     *     methods={"GET"},
-     *     requirements={"sourceLang"="[a-z]{2}", "targetLang"="[a-z]{2}", "wordId":"[a-zà-ü]++"}
-     * )
-     */
+    #[Route(
+        '/translations/{sourceLang<[a-z]{2}>}/{targetLang<[a-z]{2}>}/{wordId<[a-zà-ü]++>}',
+        name: 'translationContent',
+        methods: ["GET"]
+    )]
     public function translations(string $sourceLang, string $targetLang, string $wordId): Response
     {
         try {
@@ -55,26 +45,16 @@ class Translations extends AbstractController
             throw $e;
         }
 
-        $parameters = [
-            'text' => $wordId,
-            'senses' => $data->senses
-        ];
-
-        if (count($data->pronunciations)) {
-            $parameters['pronunciations'] = [];
-            foreach($data->pronunciations as $dialect => $pronunciation) {
-                if (in_array('phoneticSpelling', array_keys($pronunciation))) {
-                    $parameters['pronunciations'][$dialect]['phoneticSpelling'] = $pronunciation['phoneticSpelling'];
-                }
-                if (in_array('audioFile', array_keys($pronunciation))) {
-                    $parameters['pronunciations'][$dialect]['audioFile'] = $pronunciation['audioFile'];
-                }
-            }
-        }
-
         return $this->render(
             'translations/content.html.twig',
-            array_merge($parameters, $this->getParameters($sourceLang, $targetLang))
+            array_merge(
+                [
+                    'text' => $wordId,
+                    'senses' => $data->senses,
+                    'pronunciations' => $data->pronunciations
+                ],
+                $this->getParameters($sourceLang, $targetLang)
+            )
         );
     }
 

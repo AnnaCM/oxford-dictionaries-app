@@ -14,6 +14,7 @@
             {% endfor %}
         </select>
     {% else %} {# definitions mode #}
+        {% set sourceLangAudioFile = pronunciations[pronunciations|keys|first]['audioFile'] %}
         <audio hidden>
             <source src="{{ path('audio_proxy', { filename: sourceLangAudioFile|split('/')|last }) }}" type="audio/mpeg">
             Your browser does not support the audio element.

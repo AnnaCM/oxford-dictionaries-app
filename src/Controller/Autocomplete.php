@@ -7,13 +7,11 @@ use App\Service\CacheStore as CacheStoreService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class Autocomplete
 {
-    /**
-     * @Route("/autocomplete", name="autocomplete", methods={"GET"})
-     */
+    #[Route('/autocomplete', name: 'autocomplete', methods: ["GET"])]
     public function suggest(Request $request, CacheStoreService $redis): JsonResponse
     {
         $query = mb_strtolower($request->query->get('q'), 'UTF-8');;

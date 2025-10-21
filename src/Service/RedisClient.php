@@ -6,12 +6,7 @@ use SymfonyBundles\RedisBundle\Redis\ClientInterface as SymfonyRedisClient;
 
 class RedisClient implements RedisClientInterface
 {
-    private SymfonyRedisClient $client;
-
-    public function __construct(SymfonyRedisClient $client)
-    {
-        $this->client = $client;
-    }
+    public function __construct(private SymfonyRedisClient $client) {}
 
     public function exists(string $key): bool
     {
@@ -28,7 +23,7 @@ class RedisClient implements RedisClientInterface
         $this->client->setex($key, $ttl, $value);
     }
 
-    public function zAdd(string $key, array $options = [], float $value, string $member): void
+    public function zAdd(string $key, array $options, float $value, string $member): void
     {
         $this->client->zAdd($key, ...$options, ...[$value, $member]);
     }
