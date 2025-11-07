@@ -26,7 +26,7 @@ class Translations extends AbstractController
     }
 
     #[Route(
-        '/translations/{sourceLang<[a-z]{2}>}/{targetLang<[a-z]{2}>}/{wordId<[a-zà-ü]++>}',
+        '/translations/{sourceLang<[a-z]{2}>}/{targetLang<[a-z]{2}>}/{wordId<[a-zà-ü-]++>}',
         name: 'translationContent',
         methods: ["GET"]
     )]

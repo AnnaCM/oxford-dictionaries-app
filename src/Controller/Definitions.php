@@ -25,7 +25,7 @@ class Definitions extends AbstractController
 
 
     #[Route(
-        '/definitions/{sourceLang<[a-z]{2}(-[a-z]{2})?>}/{wordId<[a-zà-ü]++>}',
+        '/definitions/{sourceLang<[a-z]{2}(-[a-z]{2})?>}/{wordId<[a-zà-ü-]++>}',
         name: 'definitionContent',
         methods: ["GET"]
     )]

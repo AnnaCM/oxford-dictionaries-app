@@ -182,7 +182,7 @@ class TranslationsTest extends Base
     {
         $sourceLang = 'en';
         $targetLang = 'fa';
-        $word = 'argh';
+        $word = 'a-argh';
 
         $exception = new HttpException(500, 'Ops - Something went wrong!');
 

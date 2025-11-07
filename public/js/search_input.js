@@ -15,10 +15,39 @@ export function mountSearch({ rootSelector = '.search-bar' }) {
         };
     };
 
+    function initSelect2(mode = 'definitions') {
+        const $langSelect = $root.find('#search_language');
+        if (!$langSelect.length) return;
+        
+        // Destroy existing instance to avoid duplicates
+        if ($langSelect.hasClass('select2-hidden-accessible')) {
+            $langSelect.select2('destroy');
+        }
+
+        $langSelect.select2({
+            placeholder: mode === 'translations' ? 'Select language pair...' : 'Select language...',
+            width: 'resolve',
+            allowClear: true,
+            dropdownAutoWidth: true,
+            theme: 'default',
+            language: {
+                noResults: function () {
+                    return "No matching language found";
+                }
+            }
+        });
+    }
+
+    initSelect2();
+
     // INPUT (delegated to root)
     $root.on('input.search', '#search_word', debounce(function () {
         const query = $(this).val().trim();
+        if (query.length < 2) return;
+
         var sourceLang = $root.find('#search_language').val() || '';
+        if (!sourceLang) return;
+
         if (sourceLang.includes(' ')) {
             sourceLang = sourceLang.split(" ")[0];
         }
@@ -28,18 +57,17 @@ export function mountSearch({ rootSelector = '.search-bar' }) {
         currentIndex = -1;
 
         const $suggestions = $root.find('#suggestions').empty();
-        if (query.length < 2) return;
 
         $.getJSON('/autocomplete', { q: query, l: sourceLang })
-        .done(words => {
-            words.forEach(word => {
-                $('<li>').text(word).on('click', function () {
-                    $root.find('#search_word').val(word);
-                    $suggestions.empty();
-                }).appendTo($suggestions);
-            });
-        })
-        .fail((_, __, err) => console.error('Error fetching suggestions:', err));
+            .done(words => {
+                words.forEach(word => {
+                    $('<li>').text(word).on('click', function () {
+                        $root.find('#search_word').val(word);
+                        $suggestions.empty();
+                    }).appendTo($suggestions);
+                });
+            })
+            .fail((_, __, err) => console.error('Error fetching suggestions: ', err));
     }, 300));
 
     // KEYBOARD NAV
@@ -82,41 +110,55 @@ export function mountSearch({ rootSelector = '.search-bar' }) {
     // MODE BUTTONS (Definitions / Translations)
     $root.on('click.search', '.js-search-languages', function (e) {
         e.preventDefault();
-        const mode = $(this).data('mode'); // "definitions" | "translations"
+
+        const $button = $(this);
+        const mode = $button.data('mode'); // "definitions" | "translations"
         const $langSelect = $root.find('#search_language');
-        const selected = $langSelect.val() || '';
 
-        const needsRepopulate =
-        (mode === 'translations' && !selected.includes(' ')) ||
-        (mode === 'definitions'  &&  selected.includes(' '));
+        // Mark current mode
+        $root.find('.js-search-languages').removeClass('active');
+        $button.addClass('active');
 
-        if (!needsRepopulate) return;
+        const hasOptions = $langSelect.find('option').length > 0;
+        const hasGroupedOptions = $langSelect.find('optgroup').length > 0;
+
+        const currentDropdownMode = hasGroupedOptions ? 'translations' : 'definitions';
+
+        const needsRepopulate = !hasOptions || currentDropdownMode !== mode;
+
+        if (!needsRepopulate) {
+            console.debug(`[Search] Dropdown already in ${mode} mode — skipping reload`);
+            return;
+        }
 
         $.getJSON(`/get-languages/${mode}`, (data) => {
-        $langSelect.empty();
+            $langSelect.empty();
 
-        if (mode === 'translations') {
-            Object.keys(data.sourceLangs).forEach(sourceKey => {
-                $langSelect.append(`<option disabled>--------${data.sourceLangs[sourceKey]}--------</option>`);
-                Object.keys(data.targetLangs).forEach(targetKey => {
-                    if (sourceKey !== targetKey) {
-                        $langSelect.append(
-                            `<option value="${sourceKey} ${targetKey}" ${sourceKey == data.selectedSourceLang && targetKey == data.selectedTargetLang ? 'selected' : ''}>
-                            ${data.sourceLangs[sourceKey]}-${data.targetLangs[targetKey]}
-                            </option>`
-                        );
-                    }
+            if (mode === 'translations') {
+                Object.keys(data.sourceLangs).forEach(sourceKey => {
+                    const group = $('<optgroup>').attr('label', data.sourceLangs[sourceKey]);
+                    Object.keys(data.targetLangs).forEach(targetKey => {
+                        if (sourceKey !== targetKey) {
+                            group.append(
+                                `<option value="${sourceKey} ${targetKey}" ${sourceKey == data.selectedSourceLang && targetKey == data.selectedTargetLang ? 'selected' : ''}>
+                                    ${data.sourceLangs[sourceKey]} → ${data.targetLangs[targetKey]}
+                                </option>`
+                            );
+                        }
+                    });
+                    $langSelect.append(group);
                 });
-            });
-        } else {
-            Object.keys(data.sourceLangs).forEach(sourceKey => {
-                $langSelect.append(
-                    `<option value="${sourceKey}" ${sourceKey == data.selectedSourceLang ? 'selected' : ''}>
-                    ${data.sourceLangs[sourceKey]}
-                    </option>`
-                );
-            });
-        }
+            } else {
+                Object.keys(data.sourceLangs).forEach(sourceKey => {
+                    $langSelect.append(
+                        `<option value="${sourceKey}" ${sourceKey == data.selectedSourceLang ? 'selected' : ''}>
+                            ${data.sourceLangs[sourceKey]}
+                        </option>`
+                    );
+                });
+            }
+
+            initSelect2(mode);
         });
     });
 
@@ -124,11 +166,12 @@ export function mountSearch({ rootSelector = '.search-bar' }) {
     $root.on('click.search', '.js-search-word', function (e) {
         e.preventDefault();
 
-        const input = $root.find('#search_word').val();
+        const input = $root.find('#search_word').val().trim();
         const selectedLang = $root.find('#search_language').val() || '';
 
-        if (!input) return alert('A word to be searched is required');
-        if (input.includes(' ')) return alert('Please type a single word');
+        if (!input) return alert('Please enter a word to continue.');
+        if (input.split(/\s+/).length > 1) return alert('Please enter a single word.');
+        if (!selectedLang) return alert('Please select a language before searching.');
 
         var url = "/";
         if (selectedLang.includes(' ')) {
@@ -152,8 +195,8 @@ export function mountSearch({ rootSelector = '.search-bar' }) {
     // once-only style injection (guard by id)
     if (!document.getElementById('search-suggestion-style')) {
         $('<style id="search-suggestion-style">')
-        .text(`#suggestions li.active, #suggestions li:hover { background:#f0f0f0; color:#000; }`)
-        .appendTo('head');
+            .text(`#suggestions li.active, #suggestions li:hover { background:#f0f0f0; color:#000; }`)
+            .appendTo('head');
     }
 }
 

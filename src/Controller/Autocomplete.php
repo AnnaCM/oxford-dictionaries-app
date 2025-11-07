@@ -14,7 +14,7 @@ class Autocomplete
     #[Route('/autocomplete', name: 'autocomplete', methods: ["GET"])]
     public function suggest(Request $request, CacheStoreService $redis): JsonResponse
     {
-        $query = mb_strtolower($request->query->get('q'), 'UTF-8');;
+        $query = mb_strtolower($request->query->get('q'), 'UTF-8');
         $sourceLang = strtolower($request->query->get('l'));
         $maxResults = 5;
 

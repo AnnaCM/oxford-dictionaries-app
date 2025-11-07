@@ -2,17 +2,11 @@
 
 This PHP application integrates with the [Oxford Dictionaries API](https://developer.oxforddictionaries.com/), enabling users to fetch definitions, translations, related linguistic data and audio pronunciations for supported words and languages.
 
----
 
-## 🎥 Demo
-
-Here’s a quick look at the app in action:
-
-<p align="center">
-  <img src="docs/demo.gif" width="600" alt="App demo showing autocomplete, definitions, and translations" />
-</p>
+🎥 **[Watch the demo video](https://github.com/AnnaCM/oxford-dictionaries-app/issues/2#issue-3601247147)**
 
 ---
+
 
 ## ✅ Features
 

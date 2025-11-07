@@ -3,14 +3,18 @@
     <select id="search_language">
         {% if targetLangs is defined %}
             {% for sourceLangKey, sourceLangValue in sourceLangs %}
-                <option disabled>--------{{ sourceLangValue }}--------</option>
-                {% for targetLangKey, targetLangValue in targetLangs %}
-                    {% if sourceLangKey != targetLangKey %}
-                        <option value="{{ sourceLangKey }} {{ targetLangKey }}"{% if sourceLangKey == selectedSourceLang and targetLangKey == selectedTargetLang %} selected{% endif %}>
-                            {{ sourceLangValue }}-{{ targetLangValue }}
-                        </option>
-                    {% endif %}
-                {% endfor %}
+                <optgroup label="{{ sourceLangValue }}">
+                    {% for targetLangKey, targetLangValue in targetLangs %}
+                        {% if sourceLangKey != targetLangKey %}
+                            <option value="{{ sourceLangKey }} {{ targetLangKey }}"
+                                {% if sourceLangKey == selectedSourceLang and targetLangKey == selectedTargetLang %}
+                                    selected
+                                {% endif %}>
+                                {{ sourceLangValue }} → {{ targetLangValue }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
             {% endfor %}
         {% else %}
             {% for key, value in sourceLangs %}
