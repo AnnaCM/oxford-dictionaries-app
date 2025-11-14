@@ -22,7 +22,7 @@ This PHP application integrates with the [Oxford Dictionaries API](https://devel
 
 ## 🛠 Requirements
 
-- PHP `^8.1`
+- PHP `>=8.1`
 - Composer
 - [Symfony CLI](https://symfony.com/download) *(recommended)*
 - An [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) account
@@ -104,14 +104,54 @@ Then open your browser at: http://localhost:8000
 
 ### Run the Tests
 
-To execute the test suite:
+This project uses the Symfony PHPUnit Bridge to run tests and detect deprecated Symfony APIs.
+
+To execute the full test suite:
 ```bash
-./vendor/bin/phpunit
+composer test
 ```
 
 Ensure you have development dependencies installed:
 ```bash
 composer install --dev
+```
+
+---
+
+## 🪝 Git Hooks (optional for contributors)
+
+This project includes a **pre-commit Git hook** to help maintain code quality.
+
+### What the hook does
+
+When enabled, the hook will:
+
+- Automatically run **PHP-CS-Fixer** to format code.
+- Check staged PHP files with the **PHP linter**.
+- Prevent commits that contain syntax errors or unformatted code.
+
+This is optional but recommended. CI checks still enforce coding standards on pull requests.
+
+---
+
+### How to enable Git hooks
+
+Run the following command **once** after cloning the repository:
+
+```bash
+sh bin/setup-hooks
+```
+
+This will:
+
+- Set Git to use the `.githooks` directory in the repository
+- Make the hook files executable
+- Enable the pre-commit hook
+
+To disable hooks later:
+
+```bash
+git config --unset core.hooksPath
 ```
 
 ---

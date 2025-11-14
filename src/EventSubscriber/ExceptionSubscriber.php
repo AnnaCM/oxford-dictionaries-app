@@ -8,7 +8,9 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private ExceptionHandler $handler) {}
+    public function __construct(private ExceptionHandler $handler)
+    {
+    }
 
     public static function getSubscribedEvents(): array
     {

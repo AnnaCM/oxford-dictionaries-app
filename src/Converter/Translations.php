@@ -30,7 +30,7 @@ final class Translations implements Convertable
                         $translationsSenses = [];
 
                         $translationsSenses = self::populateTranslationsSenses($sense, $translationsSenses);
- 
+
                         if (isset($sense->subsenses)) {
                             foreach ($sense->subsenses as $subsense) {
                                 $translationsSenses = self::populateTranslationsSenses($subsense, $translationsSenses);
@@ -59,7 +59,7 @@ final class Translations implements Convertable
         }
 
         if (isset($sense->notes)) {
-            $translationsSenses['notes'] = array_filter($sense->notes, function ($sense) { return $sense->type == 'indicator'; });
+            $translationsSenses['notes'] = array_filter($sense->notes, function ($sense) { return 'indicator' == $sense->type; });
         }
 
         if (isset($sense->examples)) {

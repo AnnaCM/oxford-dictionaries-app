@@ -8,14 +8,15 @@ use Twig\Environment;
 
 class ErrorPreview
 {
-    public function __construct(private Environment $twig) {}
+    public function __construct(private Environment $twig)
+    {
+    }
 
-
-    #[Route('/_error/{code}/{context}', name: 'error_preview', methods: ["GET"])]
-    public function show(int $code, string $context = null): Response
+    #[Route('/_error/{code}/{context}', name: 'error_preview', methods: ['GET'])]
+    public function show(int $code, ?string $context = null): Response
     {
         $template = sprintf('exceptions/error%d.html.twig', $code);
-        if (!$this->twig->getLoader()->exists($template) || ($context == 'page')) {
+        if (!$this->twig->getLoader()->exists($template) || ('page' == $context)) {
             $template = sprintf('bundles/TwigBundle/Exception/error%d.html.twig', $code);
         }
 

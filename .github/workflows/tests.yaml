@@ -1,0 +1,2 @@
+- name: Run PHPUnit tests
+  run: vendor/bin/simple-phpunit --testdox

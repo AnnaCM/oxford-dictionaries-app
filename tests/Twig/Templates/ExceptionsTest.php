@@ -20,7 +20,7 @@ class ExceptionsTest extends Base
         $exception = FlattenException::create(new \Exception("Missing 'sourceLang' parameter"), 400);
 
         $haystack = $this->renderTemplate('exceptions/error400.html.twig', [
-            'exceptionMessage' => $exception->getMessage()
+            'exceptionMessage' => $exception->getMessage(),
         ]);
         $this->assertStringContainsString('<h2 class="error-heading">4😵0 - Invalid request</h2>', $haystack);
         $this->assertStringContainsString('<p class="error-message">Missing &#039;sourceLang&#039; parameter</p>', $haystack);

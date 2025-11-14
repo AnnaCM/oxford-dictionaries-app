@@ -6,7 +6,9 @@ use SymfonyBundles\RedisBundle\Redis\ClientInterface as SymfonyRedisClient;
 
 class RedisClient implements RedisClientInterface
 {
-    public function __construct(private SymfonyRedisClient $client) {}
+    public function __construct(private SymfonyRedisClient $client)
+    {
+    }
 
     public function exists(string $key): bool
     {

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Controller;
 
-
 use App\Service\ExceptionHandler;
 
 class ErrorPageTest extends Base
@@ -14,7 +13,7 @@ class ErrorPageTest extends Base
             ->getMock();
         static::getContainer()->set(ExceptionHandler::class, $mockHandler);
 
-        $this->client->request('GET', "/non-existent-endpoint");
+        $this->client->request('GET', '/non-existent-endpoint');
 
         $response = $this->client->getResponse();
         $this->assertResponseStatusCodeSame(404);

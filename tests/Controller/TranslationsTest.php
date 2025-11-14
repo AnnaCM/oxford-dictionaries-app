@@ -4,8 +4,8 @@ namespace App\Tests\Controller;
 
 use App\Entity\Translations as TranslationsEntity;
 use App\Exception\NotFoundError;
-use App\Service\Translations as TranslationsService;
 use App\Service\ExceptionHandler;
+use App\Service\Translations as TranslationsService;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -35,15 +35,15 @@ class TranslationsTest extends Base
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'it' => 'Italian', 'mr' => 'Marathi',
                     'ms' => 'Malaysian', 'pt' => 'Portuguese', 'qu' => 'Quechua', 'ru' => 'Russian', 'te' => 'Telugu',
-                    'tt' => 'Tatar', 'zh' => 'Chinese'
+                    'tt' => 'Tatar', 'zh' => 'Chinese',
                 ],
                 'targetLangs' => [
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'fa' => 'Farsi', 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'ig' => 'Igbo',
                     'it' => 'Italian', 'ka' => 'Georgian', 'mr' => 'Marathi', 'ms' => 'Malaysian', 'pt' => 'Portuguese',
                     'qu' => 'Quechua', 'ro' => 'Romanian', 'ru' => 'Russian', 'tg' => 'Tajik', 'tt' => 'Tatar',
-                    'yo' => 'Yoruba', 'zh' => 'Chinese'
-                ]
+                    'yo' => 'Yoruba', 'zh' => 'Chinese',
+                ],
             ]
         );
 
@@ -95,23 +95,23 @@ class TranslationsTest extends Base
         $translationsEntity->pronunciations = [
             'UK' => [
                 'phoneticSpelling' => 'ɔːˈθɛntɪk',
-                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/authentic_gb_1.mp3'
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/authentic_gb_1.mp3',
             ],
             'US' => [
                 'phoneticSpelling' => 'ɔˈθɛn(t)ɪk',
-                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/authentic_us_1.mp3'
-            ]
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/authentic_us_1.mp3',
+            ],
         ];
         $translationsEntity->senses = [
             'adjective' => [
                 [
                     'translations' => [$translations11],
-                    'notes' => [$notes11]
+                    'notes' => [$notes11],
                 ],
                 [
                     'translations' => [$translations21],
-                    'notes' => [$notes21]
-                ]
+                    'notes' => [$notes21],
+                ],
             ],
         ];
 
@@ -127,18 +127,18 @@ class TranslationsTest extends Base
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'it' => 'Italian', 'mr' => 'Marathi',
                     'ms' => 'Malaysian', 'pt' => 'Portuguese', 'qu' => 'Quechua', 'ru' => 'Russian', 'te' => 'Telugu',
-                    'tt' => 'Tatar', 'zh' => 'Chinese'
+                    'tt' => 'Tatar', 'zh' => 'Chinese',
                 ],
                 'targetLangs' => [
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'fa' => 'Farsi', 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'ig' => 'Igbo',
                     'it' => 'Italian', 'ka' => 'Georgian', 'mr' => 'Marathi', 'ms' => 'Malaysian', 'pt' => 'Portuguese',
                     'qu' => 'Quechua', 'ro' => 'Romanian', 'ru' => 'Russian', 'tg' => 'Tajik', 'tt' => 'Tatar',
-                    'yo' => 'Yoruba', 'zh' => 'Chinese'
+                    'yo' => 'Yoruba', 'zh' => 'Chinese',
                 ],
                 'text' => $word,
                 'senses' => $translationsEntity->senses,
-                'pronunciations' => $translationsEntity->pronunciations
+                'pronunciations' => $translationsEntity->pronunciations,
             ]
         );
 
@@ -162,16 +162,16 @@ class TranslationsTest extends Base
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'it' => 'Italian', 'mr' => 'Marathi',
                     'ms' => 'Malaysian', 'pt' => 'Portuguese', 'qu' => 'Quechua', 'ru' => 'Russian', 'te' => 'Telugu',
-                    'tt' => 'Tatar', 'zh' => 'Chinese'
+                    'tt' => 'Tatar', 'zh' => 'Chinese',
                 ],
                 'targetLangs' => [
                     'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                     'fa' => 'Farsi', 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'ig' => 'Igbo',
                     'it' => 'Italian', 'ka' => 'Georgian', 'mr' => 'Marathi', 'ms' => 'Malaysian', 'pt' => 'Portuguese',
                     'qu' => 'Quechua', 'ro' => 'Romanian', 'ru' => 'Russian', 'tg' => 'Tajik', 'tt' => 'Tatar',
-                    'yo' => 'Yoruba', 'zh' => 'Chinese'
+                    'yo' => 'Yoruba', 'zh' => 'Chinese',
                 ],
-                'text' => $word
+                'text' => $word,
             ]
         );
 

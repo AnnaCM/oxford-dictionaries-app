@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Exception\NotFoundError;
 use App\Service\Translations as TranslationsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,9 +10,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class Translations extends AbstractController
 {
-    public function __construct(private TranslationsService $service) {}
+    public function __construct(private TranslationsService $service)
+    {
+    }
 
-    #[Route('/translations', name: 'translations', methods: ["GET"])]
+    #[Route('/translations', name: 'translations', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render(
@@ -28,7 +29,7 @@ class Translations extends AbstractController
     #[Route(
         '/translations/{sourceLang<[a-z]{2}>}/{targetLang<[a-z]{2}>}/{wordId<[a-zà-ü-]++>}',
         name: 'translationContent',
-        methods: ["GET"]
+        methods: ['GET']
     )]
     public function translations(string $sourceLang, string $targetLang, string $wordId): Response
     {
@@ -51,7 +52,7 @@ class Translations extends AbstractController
                 [
                     'text' => $wordId,
                     'senses' => $data->senses,
-                    'pronunciations' => $data->pronunciations
+                    'pronunciations' => $data->pronunciations,
                 ],
                 $this->getParameters($sourceLang, $targetLang)
             )
@@ -64,7 +65,7 @@ class Translations extends AbstractController
             'selectedSourceLang' => $sourceLang,
             'selectedTargetLang' => $targetLang,
             'sourceLangs' => $this->service::ALLOWED_TRANSLATIONS_SOURCE_LANGS,
-            'targetLangs' => $this->service::ALLOWED_TRANSLATIONS_TARGET_LANGS
+            'targetLangs' => $this->service::ALLOWED_TRANSLATIONS_TARGET_LANGS,
         ];
     }
 }

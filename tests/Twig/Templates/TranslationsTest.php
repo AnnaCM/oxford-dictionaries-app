@@ -15,15 +15,15 @@ class TranslationsTest extends Base
                 'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'it' => 'Italian', 'mr' => 'Marathi',
                 'ms' => 'Malaysian', 'pt' => 'Portuguese', 'qu' => 'Quechua', 'ru' => 'Russian', 'te' => 'Telugu',
-                'tt' => 'Tatar', 'zh' => 'Chinese'
+                'tt' => 'Tatar', 'zh' => 'Chinese',
             ],
             'targetLangs' => [
                 'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                 'fa' => 'Farsi', 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'ig' => 'Igbo',
                 'it' => 'Italian', 'ka' => 'Georgian', 'mr' => 'Marathi', 'ms' => 'Malaysian', 'pt' => 'Portuguese',
                 'qu' => 'Quechua', 'ro' => 'Romanian', 'ru' => 'Russian', 'tg' => 'Tajik', 'tt' => 'Tatar',
-                'yo' => 'Yoruba', 'zh' => 'Chinese'
-            ]
+                'yo' => 'Yoruba', 'zh' => 'Chinese',
+            ],
         ];
 
         $haystack = $this->renderTemplate('translations/index.html.twig', $options);
@@ -50,7 +50,7 @@ class TranslationsTest extends Base
                 $this->assertStringContainsString('<audio hidden>', $haystack);
                 $this->assertStringContainsString('<source type="audio/mpeg">', $haystack);
                 $this->assertStringContainsString('<select id="dialect" class="dialect-select">', $haystack);
-                $this->assertStringContainsString('<option value="' . "/audio-proxy/{$filename}" . '">' . $dialect . '</option>', $haystack);
+                $this->assertStringContainsString('<option value="'."/audio-proxy/{$filename}".'">'.$dialect.'</option>', $haystack);
                 $this->assertStringContainsString('<span class="audio-error"></span>', $haystack);
             }
 
@@ -59,7 +59,7 @@ class TranslationsTest extends Base
                     $this->assertStringContainsString("  |  {$dialect}: /{$phoneticSpellingAudioPronunciations['phoneticSpelling']}/", $haystack);
                     if (isset($phoneticSpellingAudioPronunciations['audioFile'])) {
                         $filename = explode('/', $phoneticSpellingAudioPronunciations['audioFile'])[count(explode('/', $phoneticSpellingAudioPronunciations['audioFile'])) - 1];
-                        $this->assertStringContainsString('<option value="' . "/audio-proxy/{$filename}" . '">' . $dialect . '</option>', $haystack);
+                        $this->assertStringContainsString('<option value="'."/audio-proxy/{$filename}".'">'.$dialect.'</option>', $haystack);
                     }
                 }
             }
@@ -140,7 +140,7 @@ class TranslationsTest extends Base
             $examplesTranslationsCollocations21,
             $examplesTranslationsCollocations22,
             $examplesTranslationsCollocations23,
-            $examplesTranslationsCollocations24
+            $examplesTranslationsCollocations24,
         ];
         $examplesTranslations21->language = 'it';
         $examplesTranslations21->text = 'essere consapevole di';
@@ -219,15 +219,15 @@ class TranslationsTest extends Base
                 'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'it' => 'Italian', 'mr' => 'Marathi',
                 'ms' => 'Malaysian', 'pt' => 'Portuguese', 'qu' => 'Quechua', 'ru' => 'Russian', 'te' => 'Telugu',
-                'tt' => 'Tatar', 'zh' => 'Chinese'
+                'tt' => 'Tatar', 'zh' => 'Chinese',
             ],
             'targetLangs' => [
                 'en' => 'English', 'ar' => 'Arabic', 'de' => 'German', 'el' => 'Greek', 'es' => 'Spanish',
                 'fa' => 'Farsi', 'ha' => 'Hausa', 'hi' => 'Hindi', 'id' => 'Indonesian', 'ig' => 'Igbo',
                 'it' => 'Italian', 'ka' => 'Georgian', 'mr' => 'Marathi', 'ms' => 'Malaysian', 'pt' => 'Portuguese',
                 'qu' => 'Quechua', 'ro' => 'Romanian', 'ru' => 'Russian', 'tg' => 'Tajik', 'tt' => 'Tatar',
-                'yo' => 'Yoruba', 'zh' => 'Chinese'
-            ]
+                'yo' => 'Yoruba', 'zh' => 'Chinese',
+            ],
         ];
 
         $optionsWithTranslationsNotesAndExamplesAndNoPronunciations = $options;
@@ -235,14 +235,14 @@ class TranslationsTest extends Base
             'adjective' => [
                 [
                     'translations' => [$translations11, $translations12],
-                    'notes' => [$notes11]
+                    'notes' => [$notes11],
                     // no examples
                 ],
                 [
                     'translations' => [$translations21, $translations22],
                     'notes' => [$notes21],
-                    'examples' => [$examples21]
-                ]
+                    'examples' => [$examples21],
+                ],
             ],
             'noun' => [
                 [
@@ -252,9 +252,9 @@ class TranslationsTest extends Base
                         $examples31,
                         $examples32,
                         $examples33,
-                        $examples34
-                    ]
-                ]
+                        $examples34,
+                    ],
+                ],
             ],
             'verb' => [
                 [
@@ -265,14 +265,14 @@ class TranslationsTest extends Base
                 [
                     // no translations
                     // no notes
-                    'examples' => [$examples51]
-                ]
-            ]
+                    'examples' => [$examples51],
+                ],
+            ],
         ];
 
         $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation = $options;
         $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation['pronunciations'] = [
-            'UK' => ['phoneticSpelling' => 'əˈləːt']
+            'UK' => ['phoneticSpelling' => 'əˈləːt'],
         ];
         $optionsWithNoTranslationsNotesAndExamplesAndOnePronunciation['senses'] = [];
 
@@ -280,12 +280,12 @@ class TranslationsTest extends Base
         $optionsWithNoTranslationsNotesAndExamplesAndTwoPronunciations['pronunciations'] = [
             'UK' => [
                 'phoneticSpelling' => 'əˈləːt',
-                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3'
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3',
             ],
             'US' => [
                 'phoneticSpelling' => 'əˈlərt',
-                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3'
-            ]
+                'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3',
+            ],
         ];
         $optionsWithNoTranslationsNotesAndExamplesAndTwoPronunciations['senses'] = [];
 

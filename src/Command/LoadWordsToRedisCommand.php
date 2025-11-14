@@ -4,30 +4,33 @@ namespace App\Command;
 
 use App\Service\CacheStore as CacheStoreService;
 use App\Service\Dictionary as DictionaryService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'app:load-dictionary-words',
+    description: 'Loads words into Redis from a data source.'
+)]
 class LoadWordsToRedisCommand extends Command
 {
-    protected static $defaultName = 'app:load-dictionary-words';
-
     public function __construct(
         private CacheStoreService $cache,
-        private DictionaryService $service
+        private DictionaryService $service,
     ) {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $directory = __DIR__ . '/../../data';
+        $directory = __DIR__.'/../../data';
         $entries = scandir($directory);
 
         $validSourceLanguages = array_unique(
             array_map(function (string $sourceLang) {
-                    return explode('-', $sourceLang)[0];
-                },
+                return explode('-', $sourceLang)[0];
+            },
                 array_merge(
                     array_keys($this->service::ALLOWED_DEFINITIONS_SOURCE_LANGS),
                     array_keys($this->service::ALLOWED_TRANSLATIONS_SOURCE_LANGS)
@@ -36,9 +39,9 @@ class LoadWordsToRedisCommand extends Command
         );
 
         foreach ($entries as $entry) {
-            if ($entry !== '.' && $entry !== '..') {
+            if ('.' !== $entry && '..' !== $entry) {
                 $filenameParts = explode('_', $entry);
-                if ((count($filenameParts) == 1) || !in_array($filenameParts[0], $validSourceLanguages)) {
+                if ((1 == count($filenameParts)) || !in_array($filenameParts[0], $validSourceLanguages)) {
                     echo "Skipping {$entry} as filename or source language code is not valid\n";
                     continue;
                 }
@@ -47,7 +50,7 @@ class LoadWordsToRedisCommand extends Command
 
                 echo "Processing {$entry}\n";
 
-                $path = $directory . '/' . $entry;
+                $path = $directory.'/'.$entry;
                 $words = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
                 foreach ($words as $word) {
                     $word = mb_strtolower($word, 'UTF-8');

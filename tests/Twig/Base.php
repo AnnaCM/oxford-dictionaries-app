@@ -12,7 +12,7 @@ class Base extends KernelTestCase
     protected function setUp(): void
     {
         self::bootKernel();
-        /** @var Environment $this->twig */
+        /* @var Environment $this->twig */
         $this->twig = static::getContainer()->get('twig');
     }
 
@@ -50,7 +50,7 @@ class Base extends KernelTestCase
         $this->assertStringContainsString('<a href="/translations">Translations</a>', $template);
         $this->assertStringContainsString('<div class="footer-meta">', $template);
         $this->assertStringContainsString('<span>v1.0.0</span>', $template);
-        $this->assertStringContainsString('<span>© ' . date('Y') . ' WordHop</span>', $template);
+        $this->assertStringContainsString('<span>© '.date('Y').' WordHop</span>', $template);
         $this->assertStringContainsString('<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>', $template);
         $this->assertStringContainsString('<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>', $template);
         $this->assertStringContainsString('<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>', $template);

@@ -17,9 +17,9 @@ class AudioProxyTest extends Base
         $mockHttp = $this->mockHttpSequence([
             new MockResponse('', ['http_code' => 200]),
             new MockResponse('', [
-                'http_code' => 200 ,
-                'response_headers' => ['Content-Type' => 'audio/mpeg']
-            ])
+                'http_code' => 200,
+                'response_headers' => ['Content-Type' => 'audio/mpeg'],
+            ]),
         ]);
         static::getContainer()->set(HttpClientInterface::class, $mockHttp);
 
@@ -71,7 +71,7 @@ class AudioProxyTest extends Base
 
     public function testStreamHandlesNetworkTimeoutGracefully()
     {
-        $mockHttp = $this->mockHttpSequence(function() {
+        $mockHttp = $this->mockHttpSequence(function () {
             throw new TimeoutException('Network timeout');
         });
         static::getContainer()->set(HttpClientInterface::class, $mockHttp);

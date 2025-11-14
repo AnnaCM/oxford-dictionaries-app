@@ -15,7 +15,7 @@ class Definitions extends Dictionary
         HttpClientInterface $client,
         string $serverHost,
         string $appId,
-        string $appKey
+        string $appKey,
     ) {
         parent::__construct($client, $serverHost, $appId, $appKey);
     }

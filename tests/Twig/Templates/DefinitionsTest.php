@@ -13,8 +13,8 @@ class DefinitionsTest extends Base
             'sourceLangs' => [
                 'en-gb' => 'English', 'en-us' => 'American', 'es' => 'Spanish',
                 'fr' => 'French', 'gu' => 'Gujarati', 'hi' => 'Hindi', 'lv' => 'Latvian',
-                'ro' => 'Romanian', 'ta' => 'Tamil', 'zh' => 'Chinese'
-            ]
+                'ro' => 'Romanian', 'ta' => 'Tamil', 'zh' => 'Chinese',
+            ],
         ];
 
         $haystack = $this->renderTemplate('definitions/index.html.twig', $options);
@@ -37,7 +37,7 @@ class DefinitionsTest extends Base
             $this->assertStringContainsString('<button class="play-audio">', $haystack);
             $this->assertStringContainsString('<img src="/images/volume.png" height="15" alt="Listen">', $haystack);
             $this->assertStringContainsString('<audio hidden>', $haystack);
-            $this->assertStringContainsString('<source src="' . "/audio-proxy/{$filename}" . '" type="audio/mpeg">', $haystack);
+            $this->assertStringContainsString('<source src="'."/audio-proxy/{$filename}".'" type="audio/mpeg">', $haystack);
             $this->assertStringContainsString('<span class="audio-error"></span>', $haystack);
         }
         foreach ($options['senses'] as $key => $value) {
@@ -61,19 +61,19 @@ class DefinitionsTest extends Base
     public static function getOptions(): array
     {
         $example11 = new \stdClass();
-        $example11->text = "the ace of diamonds";
+        $example11->text = 'the ace of diamonds';
         $example12 = new \stdClass();
         $register11 = new \stdClass();
-        $register11->id = "figurative";
-        $register11->text = "Figurative";
+        $register11->id = 'figurative';
+        $register11->text = 'Figurative';
         $example12->registers = [$register11];
-        $example12->text = "life had started dealing him aces again";
+        $example12->text = 'life had started dealing him aces again';
         $example31 = new \stdClass();
-        $example31->text = "Nadal banged down eight aces in the set";
+        $example31->text = 'Nadal banged down eight aces in the set';
         $example43 = new \stdClass();
         $example43->text = "I didn't realize that I was ace for a long time";
         $example51 = new \stdClass();
-        $example51->text = "he can ace opponents with serves of no more than 62 mph";
+        $example51->text = 'he can ace opponents with serves of no more than 62 mph';
 
         $options = [
             'text' => 'ace',
@@ -81,7 +81,7 @@ class DefinitionsTest extends Base
             'sourceLangs' => [
                 'en-gb' => 'English', 'en-us' => 'American', 'es' => 'Spanish',
                 'fr' => 'French', 'gu' => 'Gujarati', 'hi' => 'Hindi', 'lv' => 'Latvian',
-                'ro' => 'Romanian', 'ta' => 'Tamil', 'zh' => 'Chinese'
+                'ro' => 'Romanian', 'ta' => 'Tamil', 'zh' => 'Chinese',
             ],
         ];
 
@@ -90,43 +90,43 @@ class DefinitionsTest extends Base
             'noun' => [
                 [
                     'definitions' => [
-                        "a playing card with a single spot on it, ranked as the highest card in its suit in most card games"
+                        'a playing card with a single spot on it, ranked as the highest card in its suit in most card games',
                     ],
-                    'examples' => [$example11, $example12]
+                    'examples' => [$example11, $example12],
                 ],
                 [
-                    'definitions' => ["a person who excels at a particular sport or other activity"]
+                    'definitions' => ['a person who excels at a particular sport or other activity'],
                     // no examples
                 ],
                 [
-                    'definitions' => ["(in tennis and similar games) a service that an opponent is unable to return and thus wins a point"],
-                    'examples' => [$example31]
+                    'definitions' => ['(in tennis and similar games) a service that an opponent is unable to return and thus wins a point'],
+                    'examples' => [$example31],
                 ],
                 [
-                    'definitions' => ["an asexual person"]
+                    'definitions' => ['an asexual person'],
                     // no examples
-                ]
+                ],
             ],
             'adjective' => [
                 [
-                    'definitions' => ["very good"]
+                    'definitions' => ['very good'],
                     // no examples
                 ],
                 [
                     // no definitions
-                    'examples' => [$example43]
-                ]
+                    'examples' => [$example43],
+                ],
             ],
             'verb' => [
                 [
-                    'definitions' => ["(in tennis and similar games) serve an ace against (an opponent)"],
-                    'examples' => [$example51]
+                    'definitions' => ['(in tennis and similar games) serve an ace against (an opponent)'],
+                    'examples' => [$example51],
                 ],
                 [
-                    'definitions' => ["achieve high marks in (a test or exam)"]
+                    'definitions' => ['achieve high marks in (a test or exam)'],
                     // no examples
-                ]
-            ]
+                ],
+            ],
         ];
 
         $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile = $options;
@@ -134,7 +134,7 @@ class DefinitionsTest extends Base
             'UK' => [
                 'phoneticSpelling' => 'eɪs',
                 'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ace__gb_3.mp3',
-            ]
+            ],
         ];
         $optionsWithNoDefinitionsExamplesAndPhoneticSpellingAndAudioFile['senses'] = [];
 

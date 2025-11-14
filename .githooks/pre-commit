@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+echo "Running PHP-CS-Fixer..."
+vendor/bin/php-cs-fixer fix --quiet || exit 1
+
+echo "Checking PHP syntax..."
+# Only check staged PHP files
+git diff --cached --name-only --diff-filter=ACM | grep '\.php$' | while read file; do
+    php -l "$file" || exit 1
+done
+
+# Re-stage files that PHP-CS-Fixer modified
+git add .
+
+echo "Pre-commit checks passed."

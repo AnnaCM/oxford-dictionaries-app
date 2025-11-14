@@ -8,18 +8,16 @@
             "ref": "87424683adc81d7dc305eefec1fced883084aab9"
         }
     },
-    "phpunit/phpunit": {
-        "version": "10.5",
+    "friendsofphp/php-cs-fixer": {
+        "version": "3.89",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "10.0",
-            "ref": "bb22cf8d8c554a623b427d5f3416b538f5525233"
+            "version": "3.0",
+            "ref": "be2103eb4a20942e28a6dd87736669b757132435"
         },
         "files": [
-            ".env.test",
-            "phpunit.xml.dist",
-            "tests/bootstrap.php"
+            ".php-cs-fixer.dist.php"
         ]
     },
     "symfony-bundles/redis-bundle": {
@@ -60,14 +58,15 @@
         ]
     },
     "symfony/framework-bundle": {
-        "version": "6.4",
+        "version": "7.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "6.4",
-            "ref": "32126346f25e1cee607cc4aa6783d46034920554"
+            "version": "7.3",
+            "ref": "5a1497d539f691b96afd45ae397ce5fe30beb4b9"
         },
         "files": [
+            ".editorconfig",
             "config/packages/cache.yaml",
             "config/packages/framework.yaml",
             "config/preload.php",
@@ -84,11 +83,20 @@
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "3.7",
-            "ref": "aff23899c4440dd995907613c1dd709b6f59503f"
+            "ref": "1b9efb10c54cb51c713a9391c9300ff8bceda459"
         },
         "files": [
             "config/packages/monolog.yaml"
         ]
+    },
+    "symfony/phpunit-bridge": {
+        "version": "7.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.3",
+            "ref": "dc13fec96bd527bd399c3c01f0aab915c67fd544"
+        }
     },
     "symfony/routing": {
         "version": "6.4",

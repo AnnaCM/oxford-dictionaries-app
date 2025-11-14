@@ -12,10 +12,10 @@ final class Pronunciations
             $dialect = '';
             if (isset($pronunciation->dialects)) {
                 $dialect = $pronunciation->dialects[0];
-                if ($dialect == 'British English') {
+                if ('British English' == $dialect) {
                     $dialect = 'UK';
                 }
-                if ($dialect == 'American English') {
+                if ('American English' == $dialect) {
                     $dialect = 'US';
                 }
 
@@ -32,11 +32,9 @@ final class Pronunciations
                         'audioFile' => $pronunciation->audioFile,
                         'phoneticSpelling' => $pronunciation->phoneticSpelling,
                     ];
-                }
-                else if (isset($pronunciation->audioFile)) {
+                } elseif (isset($pronunciation->audioFile)) {
                     $entries->pronunciations[]['audioFile'] = $pronunciation->audioFile;
-                }
-                else if (isset($pronunciation->phoneticSpelling)) {
+                } elseif (isset($pronunciation->phoneticSpelling)) {
                     $entries->pronunciations[]['phoneticSpelling'] = $pronunciation->phoneticSpelling;
                 }
             }

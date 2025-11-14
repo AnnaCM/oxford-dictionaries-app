@@ -9,17 +9,18 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class AudioProxy
 {
-    public function __construct(private HttpClientInterface $client) {}
+    public function __construct(private HttpClientInterface $client)
+    {
+    }
 
-
-    #[Route('/audio-proxy/{filename<.+>}', name: 'audio_proxy', methods: ["GET"])]
+    #[Route('/audio-proxy/{filename<.+>}', name: 'audio_proxy', methods: ['GET'])]
     public function stream(string $filename): Response
     {
         $url = "https://audio.oxforddictionaries.com/en/mp3/{$filename}";
 
         try {
             $headResponse = $this->client->request('HEAD', $url);
-            if ($headResponse->getStatusCode() !== 200) {
+            if (200 !== $headResponse->getStatusCode()) {
                 return new Response(
                     'Audio unavailable.',
                     Response::HTTP_NOT_FOUND,

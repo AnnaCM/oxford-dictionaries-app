@@ -6,10 +6,10 @@ use App\EventSubscriber\ExceptionSubscriber;
 use App\Service\ExceptionHandler;
 use ColinODell\PsrTestLogger\TestLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 class ExceptionSubscriberTest extends WebTestCase
@@ -44,6 +44,6 @@ class ExceptionSubscriberTest extends WebTestCase
         $this->assertTrue($mockLogger->hasErrorThatContains('Caught exception: Invalid request'));
         $this->assertTrue($mockLogger->hasErrorThatContains('File: /Volumes/Projects/oxford-dictionaries-app/tests/EventSubscriber/ExceptionSubscriberTest.php'));
         $this->assertTrue($mockLogger->hasErrorThatContains('Line: 35'));
-        $this->assertTrue($mockLogger->hasErrorThatContains('Exception trace: #0 /Volumes/Projects/oxford-dictionaries-app/vendor/phpunit/phpunit/src/Framework/TestCase.php(1548): App\Tests\EventSubscriber\ExceptionSubscriberTest->testExceptionSubscriberHandles400AndLogsError()'));
+        $this->assertTrue($mockLogger->hasErrorThatContains('Exception trace: #0 /Volumes/Projects/oxford-dictionaries-app/vendor/bin/.phpunit/phpunit-9.6-0/src/Framework/TestCase.php(1618): App\Tests\EventSubscriber\ExceptionSubscriberTest->testExceptionSubscriberHandles400AndLogsError()'));
     }
 }

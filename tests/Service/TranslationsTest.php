@@ -33,7 +33,7 @@ class TranslationsTest extends TestCase
 
         $this->translationsService = new TranslationsService(
             $this->cacheServiceMock,
-            $this->mockHttpClient(file_get_contents(__DIR__ . "/Fixtures/Translations/alert.json"), 200),
+            $this->mockHttpClient(file_get_contents(__DIR__.'/Fixtures/Translations/alert.json'), 200),
             $this->endpoint,
             $this->appId,
             $this->appKey
@@ -107,7 +107,7 @@ class TranslationsTest extends TestCase
         string $word,
         string $sourceLang,
         string $targetLang,
-        array $result
+        array $result,
     ) {
         $this->cacheServiceMock
             ->expects($this->once())
@@ -119,17 +119,17 @@ class TranslationsTest extends TestCase
             ->method('set')
             ->with(
                 "App\Service\Translations::getTranslations_{$word}_{$sourceLang}_{$targetLang}",
-                json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json"))
+                json_decode(file_get_contents(__DIR__."/Fixtures/Translations/{$word}.json"))
             );
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('zIncrBy')
             ->with("{$sourceLang}_dictionary_words", 1, $word);
 
-        if ($word != 'alert') {
+        if ('alert' != $word) {
             $translationsService = new TranslationsService(
                 $this->cacheServiceMock,
-                $this->mockHttpClient(file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json"), 200),
+                $this->mockHttpClient(file_get_contents(__DIR__."/Fixtures/Translations/{$word}.json"), 200),
                 $this->endpoint,
                 $this->appId,
                 $this->appKey
@@ -153,7 +153,7 @@ class TranslationsTest extends TestCase
             ->expects($this->once())
             ->method('get')
             ->with("App\Service\Translations::getTranslations_{$word}_{$sourceLang}_{$targetLang}")
-            ->willReturn(json_decode(file_get_contents(__DIR__ . "/Fixtures/Translations/{$word}.json")));
+            ->willReturn(json_decode(file_get_contents(__DIR__."/Fixtures/Translations/{$word}.json")));
         $this->cacheServiceMock->expects($this->never())->method('set');
         $this->cacheServiceMock->expects($this->never())->method('zIncrBy');
 
@@ -215,7 +215,7 @@ class TranslationsTest extends TestCase
             $examplesTranslationsCollocations21,
             $examplesTranslationsCollocations22,
             $examplesTranslationsCollocations23,
-            $examplesTranslationsCollocations24
+            $examplesTranslationsCollocations24,
         ];
         $examplesTranslations21->language = 'it';
         $examplesTranslations21->text = 'essere consapevole di';
@@ -290,24 +290,24 @@ class TranslationsTest extends TestCase
             'pronunciations' => [
                 'UK' => [
                     'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__gb_1_8.mp3',
-                    'phoneticSpelling' => 'əˈləːt'
+                    'phoneticSpelling' => 'əˈləːt',
                 ],
                 'US' => [
                     'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/alert__us_1.mp3',
-                    'phoneticSpelling' => 'əˈlərt'
-                ]
+                    'phoneticSpelling' => 'əˈlərt',
+                ],
             ],
             'senses' => [
                 'adjective' => [
                     [
                         'translations' => [$translations11, $translations12],
-                        'notes' => [$notes11]
+                        'notes' => [$notes11],
                     ],
                     [
                         'translations' => [$translations21, $translations22],
                         'notes' => [$notes21],
-                        'examples' => [$examples21]
-                    ]
+                        'examples' => [$examples21],
+                    ],
                 ],
                 'noun' => [
                     [
@@ -316,18 +316,18 @@ class TranslationsTest extends TestCase
                             $examples31,
                             $examples32,
                             $examples33,
-                            $examples34
-                        ]
-                    ]
+                            $examples34,
+                        ],
+                    ],
                 ],
                 'verb' => [
                     [
                         'translations' => [$translations41],
                     ],
                     [
-                        'examples' => [$examples51]
-                    ]
-                ]
+                        'examples' => [$examples51],
+                    ],
+                ],
             ],
         ];
 
@@ -364,24 +364,24 @@ class TranslationsTest extends TestCase
             'pronunciations' => [
                 'US' => [
                     'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/ad__1_us_1.mp3',
-                    'phoneticSpelling' => 'u00e6d'
+                    'phoneticSpelling' => 'u00e6d',
                 ],
                 'UK' => [
                     'audioFile' => 'https://audio.oxforddictionaries.com/en/mp3/add__gb_2.mp3',
-                    'phoneticSpelling' => 'ad'
+                    'phoneticSpelling' => 'ad',
                 ],
             ],
             'senses' => [
                 'noun' => [
                     [
                         'notes' => [$crossReferences11],
-                    ]
+                    ],
                 ],
                 'adverb' => [
                     [
                         'translations' => [$translations11, $translations12, $translations13, $translations14],
                         'definitions' => ['Anno Domini'],
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -401,12 +401,12 @@ class TranslationsTest extends TestCase
                 'adjective' => [
                     [
                         'translations' => [$translations11],
-                    ]
+                    ],
                 ],
                 'verb' => [
                     [
                         'translations' => [$translations21],
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -459,9 +459,9 @@ class TranslationsTest extends TestCase
                             $examples12,
                             $examples13,
                             $examples14,
-                        ]
-                    ]
-                ]
+                        ],
+                    ],
+                ],
             ],
         ];
 

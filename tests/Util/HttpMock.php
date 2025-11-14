@@ -10,7 +10,7 @@ trait HttpMock
     protected function mockHttpClient(
         string $responseBody = '',
         int $statusCode = 200,
-        array $headers = ['Content-Type' => 'application/json']
+        array $headers = ['Content-Type' => 'application/json'],
     ): MockHttpClient {
         $mockResponse = new MockResponse($responseBody, [
             'http_code' => $statusCode,

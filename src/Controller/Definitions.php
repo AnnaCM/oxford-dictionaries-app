@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-
 use App\Exception\NotFoundError;
 use App\Service\Definitions as DefinitionsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,10 +10,11 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class Definitions extends AbstractController
 {
-    public function __construct(private DefinitionsService $service) {}
+    public function __construct(private DefinitionsService $service)
+    {
+    }
 
-
-    #[Route(['/', '/definitions'], name: 'definitions', methods: ["GET"])]
+    #[Route(['/', '/definitions'], name: 'definitions', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render(
@@ -23,11 +23,10 @@ class Definitions extends AbstractController
         );
     }
 
-
     #[Route(
         '/definitions/{sourceLang<[a-z]{2}(-[a-z]{2})?>}/{wordId<[a-zà-ü-]++>}',
         name: 'definitionContent',
-        methods: ["GET"]
+        methods: ['GET']
     )]
     public function definitions(string $sourceLang, string $wordId): Response
     {
@@ -50,7 +49,7 @@ class Definitions extends AbstractController
                 [
                     'text' => $wordId,
                     'senses' => $data->senses,
-                    'pronunciations' => $data->pronunciations
+                    'pronunciations' => $data->pronunciations,
                 ],
                 $this->getParameters($sourceLang)
             )
