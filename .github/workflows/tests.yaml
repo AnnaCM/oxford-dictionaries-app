@@ -1,2 +1,26 @@
-- name: Run PHPUnit tests
-  run: vendor/bin/simple-phpunit --testdox
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: [8.1, 8.2, 8.3]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Run PHPUnit tests
+        run: vendor/bin/simple-phpunit --testdox
