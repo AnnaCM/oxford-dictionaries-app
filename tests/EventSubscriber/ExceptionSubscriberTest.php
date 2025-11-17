@@ -34,6 +34,7 @@ class ExceptionSubscriberTest extends WebTestCase
             HttpKernelInterface::MAIN_REQUEST,
             new BadRequestHttpException($exceptionMessage)
         );
+        $exception = $event->getThrowable();
 
         $subscriber->onKernelException($event);
 
@@ -41,9 +42,11 @@ class ExceptionSubscriberTest extends WebTestCase
         $this->assertSame('Rendered content', $event->getResponse()->getContent());
 
         $this->assertTrue($mockLogger->hasErrorRecords());
-        $this->assertTrue($mockLogger->hasErrorThatContains('Caught exception: Invalid request'));
-        $this->assertTrue($mockLogger->hasErrorThatContains('File: /Volumes/Projects/oxford-dictionaries-app/tests/EventSubscriber/ExceptionSubscriberTest.php'));
-        $this->assertTrue($mockLogger->hasErrorThatContains('Line: 35'));
-        $this->assertTrue($mockLogger->hasErrorThatContains('Exception trace: #0 /Volumes/Projects/oxford-dictionaries-app/vendor/bin/.phpunit/phpunit-9.6-0/src/Framework/TestCase.php(1618): App\Tests\EventSubscriber\ExceptionSubscriberTest->testExceptionSubscriberHandles400AndLogsError()'));
+        $this->assertTrue($mockLogger->hasErrorThatContains('Caught exception: '.$exceptionMessage));
+        $this->assertTrue($mockLogger->hasErrorThatContains(basename($exception->getFile())));
+        $this->assertTrue($mockLogger->hasErrorThatContains('Line: '.$exception->getLine()));
+        $this->assertTrue($mockLogger->hasErrorThatContains('Exception trace:'));
+        $this->assertTrue($mockLogger->hasErrorThatContains(self::class));
+        $this->assertTrue($mockLogger->hasErrorThatContains(__FUNCTION__));
     }
 }
