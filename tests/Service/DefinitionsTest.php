@@ -97,6 +97,10 @@ class DefinitionsTest extends TestCase
         string $sourceLang,
         array $result,
     ) {
+        $wordNormalized = \Normalizer::normalize($word, \Normalizer::FORM_C);
+        $file = __DIR__."/Fixtures/Definitions/{$wordNormalized}.json";
+        $this->assertFileExists($file, "Fixture file $file should exist");
+
         $this->cacheServiceMock
             ->expects($this->once())
             ->method('get')
@@ -107,7 +111,7 @@ class DefinitionsTest extends TestCase
             ->method('set')
             ->with(
                 'App\Service\Definitions::getDefinitions_'.$word.'_'.$sourceLang,
-                json_decode(file_get_contents(__DIR__."/Fixtures/Definitions/{$word}.json"))
+                json_decode(file_get_contents($file))
             );
         $keyPrefix = explode('-', $sourceLang)[0];
         $this->cacheServiceMock
@@ -118,7 +122,7 @@ class DefinitionsTest extends TestCase
         if ('ace' != $word) {
             $definitionsService = new DefinitionsService(
                 $this->cacheServiceMock,
-                $this->mockHttpClient(file_get_contents(__DIR__."/Fixtures/Definitions/{$word}.json"), 200),
+                $this->mockHttpClient(file_get_contents($file), 200),
                 $this->endpoint,
                 $this->appId,
                 $this->appKey
