@@ -12,17 +12,17 @@ This PHP application integrates with the [Oxford Dictionaries API](https://devel
 
 - Fetch word definitions by language
 - Retrieve translations between supported language pairs
-- Listen to audio pronunciations for both definitions and translations (via proxy streaming to ensure CORS-safe playback)
-- Autocomplete powered by Redis, supporting accented characters across multiple languages
-- Caching with Redis for faster performance and fewer API requests
-- Graceful API error handling with custom Twig templates
-- Functional test coverage for key routes and exception handling
+- Stream audio pronunciations safely via a proxy (CORS-safe)
+- Autocomplete powered by Redis with full Unicode/accents support
+- Response caching using Redis to improve performance and reduce API calls
+- Graceful error handling with custom Twig error pages
+- Functional test coverage for core routes and exception scenarios
 
 ---
 
 ## 🛠 Requirements
 
-- PHP `>=8.1`
+- PHP `>=8.3`
 - Composer
 - [Symfony CLI](https://symfony.com/download) *(recommended)*
 - An [Oxford Dictionaries API](https://developer.oxforddictionaries.com/) account
@@ -33,14 +33,12 @@ This PHP application integrates with the [Oxford Dictionaries API](https://devel
 ## ⚙️ Setup
 
 ### 1. Clone the repository
-
 ```bash
 git clone git@github.com:AnnaCM/oxford-dictionaries-app.git
 cd oxford-dictionaries-app
 ```
 
 ### 2. Install dependencies
-
 ```bash
 composer install
 ```
@@ -91,7 +89,6 @@ Redis is optional. If unavailable, the app logs a warning and continues to opera
 ## 🚀 Usage
 
 ### Run the application
-
 - Using Symfony CLI:
 ```bash
 symfony serve
@@ -103,7 +100,6 @@ php -S localhost:8000 -t public
 Then open your browser at: http://localhost:8000
 
 ### Run the Tests
-
 This project uses the Symfony PHPUnit Bridge to run tests and detect deprecated Symfony APIs.
 
 To execute the full test suite:
@@ -123,7 +119,6 @@ composer install --dev
 This project includes a **pre-commit Git hook** to help maintain code quality.
 
 ### What the hook does
-
 When enabled, the hook will:
 
 - Automatically run **PHP-CS-Fixer** to format code.
@@ -135,7 +130,6 @@ This is optional but recommended. CI checks still enforce coding standards on pu
 ---
 
 ### How to enable Git hooks
-
 Run the following command **once** after cloning the repository:
 
 ```bash
@@ -161,7 +155,83 @@ git config --unset core.hooksPath
 Forks, suggestions, improvements, and contributions are all welcome!  
 If you have ideas or find issues, feel free to open an issue or submit a pull request.
 
-Let's make this project better together. 🙌
+---
+
+## 🚀 Scalability & Future Improvements
+
+This project is intentionally lightweight, but it has a clear path toward becoming a more scalable, robust, and production-ready service.
+Below are several areas for enhancement, especially relevant for higher-traffic or distributed environments.
+
+### 1. Enhanced Redis Strategy
+Redis currently powers caching and autocomplete. Future improvements could include:
+
+- Adding tag-based cache invalidation for selective clearing
+- Preloading Redis with the most queried words at deploy time
+- Tracking autocomplete popularity with Redis sorted-set scoring
+
+### 2. Asynchronous Processing
+Some tasks can be moved out of the request/response cycle for better performance:
+
+- Introduce Symfony Messenger with Redis/RabbitMQ for background jobs
+- Create background workers for:
+    - Dictionary ingestion
+    - Audio metadata refresh
+    - Cache warm-ups
+    - Bulk language updates
+
+This keeps the UI responsive even when processing large datasets.
+
+### 3. Rate Limiting & Resilience
+To make the system more resilient and avoid API throttling:
+
+- Add Symfony RateLimiter to throttle autocomplete and audio requests
+- Implement retry/backoff for Oxford API failures
+- Introduce a circuit breaker pattern if the external API becomes slow or unresponsive
+- Cache audio metadata to reduce dependency on real-time HEAD/GET checks
+
+### 4. Horizontal Scalability
+The app can scale across multiple servers or containers:
+
+- Stateless design → works well behind a load balancer
+- Shared Redis cluster ensures consistent autocomplete and caching
+- Dockerizing the app enables:
+    - Kubernetes on cloud providers
+    - Rapid spin-up for ephemeral environments
+
+### 5. Observability & Monitoring
+For production-level insight:
+
+- Add Sentry for error tracking
+- Implement application health endpoints
+- Monitor Redis connection health and latency
+
+### 6. Security Enhancements
+Production security can be improved with:
+
+- Strict parameter validation on all routes
+- Using Symfony Secrets Vault instead of .env for sensitive data
+
+### 7. CI/CD Pipeline Improvements
+The existing GitHub Actions CI can be extended to:
+
+- Run PHPStan or Psalm for static analysis
+- Add a deployment workflow for staging and production environments
+- Add cache warm-up jobs after deployments
+
+### 8. Improved Dictionary Ingestion
+More scalable ingestion could include:
+
+- Scheduled nightly jobs for dictionary updates
+- Higher-level search features (fuzzy matching, ranking, typo tolerance)
+
+### 9. User Accounts & Personalization
+Additional user-focused features could turn the application into a more interactive and personalized learning tool:
+
+- User authentication (Symfony Security / OAuth / JWT)
+- Store favourite words for each user in a relational database
+- Personalized “Word of the Day”, selected from favourites or recent searches
+- Scheduled background jobs to automatically rotate or refresh the Word of the Day
+- Optional notification or email hooks for daily word delivery
 
 ---
 
